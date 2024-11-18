@@ -1,0 +1,20 @@
+[binaries]
+c = 'clang'
+cpp = 'clang++'
+c_ld = 'lld'
+cpp_ld = 'lld'
+ar = 'llvm-ar'
+strip = 'llvm-strip'
+nasm = 'nasm'
+
+[built-in options]
+c_args = ['-target', 'x86_64-pc-none-elf', '-m64', '-march=x86-64', '-mno-80387', '-mno-mmx', '-mno-sse', '-mno-sse2', '-mno-red-zone', '-mcmodel=kernel']
+c_link_args = ['-m', 'elf_x86_64']
+cpp_args = ['-target', 'x86_64-pc-none-elf', '-m64', '-march=x86-64', '-mno-80387', '-mno-mmx', '-mno-sse', '-mno-sse2', '-mno-red-zone', '-mcmodel=kernel']
+#cpp_link_args = ['-m', 'elf_x86_64']
+
+[host_machine]
+system = 'pc'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
