@@ -59,7 +59,6 @@ desired_common_compile_flags = [
     '-ffunction-sections',
     '-fdata-sections',
     '-ffreestanding',
-    '-nostdinc',
 ]
 
 if meson.is_subproject() == false

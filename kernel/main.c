@@ -1,4 +1,7 @@
+#include <kernel/arch/arch.h>
+
 void kmain()
 {
-    while (1) { asm volatile("hlt"); }
+    arch_initialize();
+    arch_halt(true);
 }

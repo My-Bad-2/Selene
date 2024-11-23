@@ -12,6 +12,7 @@ project(
         'build.c_std=gnu23',
         'cpp_std=gnu++2a',
         'build.cpp_std=gnu++2a',
+        'buildtype=debugoptimized',
     ],
     meson_version: '>=0.58.0',
     version: '0.0.1',
@@ -151,6 +152,7 @@ subdir('meson/objcopy')
 
 limine = subproject('limine')
 ovmf = subproject('ovmf')
+awesome_css = subproject('doxygen-awesome-css')
 
 ###############
 # Dependencies #

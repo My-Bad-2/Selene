@@ -57,3 +57,4 @@ builddir/
 
 subprojects/limine/
 subprojects/ovmf/
+subprojects/doxygen-awesome-css/
