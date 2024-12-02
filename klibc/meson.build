@@ -1,5 +1,10 @@
 klibc_sources = files('ctype.c')
 
+subdir('string')
+subdir('internal')
+subdir('stdio')
+subdir('stdlib')
+
 clangtidy_files += klibc_sources
 
 klibc = static_library(

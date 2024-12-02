@@ -15,7 +15,6 @@ desired_common_warning_flags = [
     '-Wno-covered-switch-default',
     # Desired Warnings
     '-Wfloat-equal',
-    '-Wconversion',
     '-Wlogical-op',
     '-Wundef',
     '-Wredundant-decls',
@@ -29,7 +28,6 @@ desired_common_warning_flags = [
     '-Wmissing-include-dirs',
     '-Wcast-align',
     '-Wswitch-enum',
-    '-Wsign-conversion',
     '-Wdisabled-optimization',
     # '-Winline', # Now disabled because it is mostly warning us about default constructors and destructors
     '-Winvalid-pch',
@@ -41,7 +39,6 @@ desired_common_warning_flags = [
     '-Wshift-overflow=2',
     '-Wnull-dereference',
     '-Wduplicated-cond',
-    '-Wshift-overflow=2',
     '-Wnull-dereference',
     '-Wduplicated-cond',
     '-Wcast-align=strict',

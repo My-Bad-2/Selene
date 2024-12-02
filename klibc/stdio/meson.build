@@ -1,0 +1,15 @@
+klibc_sources += files(
+    '__overflow.c',
+    '__stdio_write.c',
+    '__towrite.c',
+    'feof.c',
+    'ferror.c',
+    'fwrite.c',
+    'printf.c',
+    'putc.c',
+    'stderr.c',
+    'stdin.c',
+    'stdout.c',
+    'vfprintf.c',
+    'vsnprintf.c',
+)

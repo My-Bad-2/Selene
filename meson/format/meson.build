@@ -42,8 +42,9 @@ endif
 
 # Target files and folders to include in clang-format analysis
 clangformat_default_targets = [
-    meson.project_source_root() / 'src',
-    meson.project_source_root() / 'test',
+    meson.project_source_root() / 'kernel',
+    meson.project_source_root() / 'klibc',
+    meson.project_source_root() / 'include',
 ]
 
 # Override this variable to supply your own list of targets

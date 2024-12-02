@@ -22,50 +22,32 @@ void arch_halt(bool interrupts)
 /**
  * @details Uses the `outb` assembly instruction to write the value.
  */
-void outpb(uint16_t port, uint8_t val)
-{
-    asm volatile("outb %0, %1" ::"a"(val), "Nd"(port));
-}
+void outpb(uint16_t port, uint8_t val) { asm volatile("outb %0, %1" ::"a"(val), "Nd"(port)); }
 
 /**
  * @details Uses the `outw` assembly instruction to write the value.
  */
-void outpw(uint16_t port, uint16_t val)
-{
-    asm volatile("outw %0, %1" ::"a"(val), "Nd"(port));
-}
+void outpw(uint16_t port, uint16_t val) { asm volatile("outw %0, %1" ::"a"(val), "Nd"(port)); }
 
 /**
  * @details Uses the `outl` assembly instruction to write the value.
  */
-void outpl(uint16_t port, uint32_t val)
-{
-    asm volatile("outl %0, %1" ::"a"(val), "Nd"(port));
-}
+void outpl(uint16_t port, uint32_t val) { asm volatile("outl %0, %1" ::"a"(val), "Nd"(port)); }
 
 /**
  * @details Uses the `inb` assembly instruction to read the value.
  */
-void inpb(uint16_t port, uint8_t *val)
-{
-    asm volatile("inb %1, %0" : "=a"(*val) : "Nd"(port));
-}
+void inpb(uint16_t port, uint8_t *val) { asm volatile("inb %1, %0" : "=a"(*val) : "Nd"(port)); }
 
 /**
  * @details Uses the `inw` assembly instruction to read the value.
  */
-void inpw(uint16_t port, uint16_t *val)
-{
-    asm volatile("inw %1, %0" : "=a"(*val) : "Nd"(port));
-}
+void inpw(uint16_t port, uint16_t *val) { asm volatile("inw %1, %0" : "=a"(*val) : "Nd"(port)); }
 
 /**
  * @details Uses the `inl` assembly instruction to read the value.
  */
-void inpl(uint16_t port, uint32_t *val)
-{
-    asm volatile("inl %1, %0" : "=a"(*val) : "Nd"(port));
-}
+void inpl(uint16_t port, uint32_t *val) { asm volatile("inl %1, %0" : "=a"(*val) : "Nd"(port)); }
 
 // NOLINTEND
 
@@ -75,3 +57,20 @@ void inpl(uint16_t port, uint32_t *val)
  * architecture dependencies.
  */
 void arch_initialize() { uart_initialize(COM_PORT1); }
+
+#include <stddef.h>
+
+/**
+ * @details This function sends each character in the buffer to the primary UART
+ *          (COM1) using the `uart_putc` function.
+ */
+int arch_write(const char *buffer, size_t length)
+{
+    if (length == 0) { return 0; }
+
+    if (buffer == NULL) { return 0; }
+
+    for (size_t i = 0; i < length; i++) { uart_putc(buffer[i], COM_PORT1); }
+
+    return length;
+}

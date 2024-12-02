@@ -30,12 +30,13 @@ if iso_inputs.length() == 0
     )
 endif
 
-copy_efi = custom_target(
-    'copy-efi',
-    output: 'copy-efi',
+# Add a run target for ISO creation
+build_iso = custom_target(
+    'build-iso',
+    output: iso_output,
     command: [
         'rm',
-        '-rf', iso_root_dir / '',
+        '-rf', iso_root_dir,
         '&&',
         'mkdir',
         '-p', iso_root_dir / 'boot/EFI',
@@ -43,38 +44,18 @@ copy_efi = custom_target(
         'cp',
         iso_efi,
         iso_root_dir / 'boot/EFI',
-    ],
-)
-
-copy_kernel = custom_target(
-    'copy_kernel',
-    output: 'copy_kernel',
-    command: [
-        'cp', kernel.full_path(), iso_root_dir / 'boot',
-    ],
-    depends: kernel,
-)
-
-# Copy all necessary files into the ISO root
-prepare_iso = custom_target(
-    'prepare-iso',
-    output: 'prepare-iso',
-    command: [
+        '&&',
         'mkdir',
         '-p', iso_root_dir / 'boot/limine',
         '&&',
         'cp',
         iso_files,
         iso_root_dir / 'boot/limine',
-    ],
-    depends: copy_kernel,
-)
-
-# Add a run target for ISO creation
-build_iso = custom_target(
-    'build-iso',
-    output: iso_output,
-    command: [
+        '&&',
+        'cp',
+        kernel.full_path(),
+        iso_root_dir / 'boot',
+        '&&',
         'xorriso',
         '-as', 'mkisofs',
         '-R',
@@ -87,5 +68,5 @@ build_iso = custom_target(
         'bios-install',
         iso_output,
     ],
-    depends: [kernel, copy_efi, prepare_iso],
+    depends: [kernel],
 )

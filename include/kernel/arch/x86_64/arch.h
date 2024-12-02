@@ -7,6 +7,7 @@
 
 #include <compiler.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 /// @brief Inserts a CPU pause instruction.
@@ -24,15 +25,13 @@
 /// @brief Writes a value to the specified port.
 /// @details Automatically selects the correct implementation based on the value
 /// type.
-#define outp(port, val) \
-    _Generic((val), uint8_t: outpb, uint16_t: outpw, uint32_t: outpl)(port, val)
+#define outp(port, val) _Generic((val), uint8_t: outpb, uint16_t: outpw, uint32_t: outpl)(port, val)
 
 /// @brief Reads a value from the specified port.
 /// @details Automatically selects the correct implementation based on the value
 /// type.
-#define inp(port, val)                                                    \
-    _Generic((val), uint8_t *: inpb, uint16_t *: inpw, uint32_t *: inpl)( \
-      port, val)
+#define inp(port, val) \
+    _Generic((val), uint8_t *: inpb, uint16_t *: inpw, uint32_t *: inpl)(port, val)
 
 /**
  * @brief Halts the system, optionally disabling interrupts beforehand.
@@ -87,5 +86,13 @@ void inpl(uint16_t port, uint32_t *val);
  * @brief Initializes architecture-specific components.
  */
 void arch_initialize();
+
+/**
+ * @brief Writes a buffer of characters to the output device.
+ * @param buffer Pointer to the character buffer to write.
+ * @param length Number of characters to write.
+ * @return The number of characters written, or 0 if the buffer is `NULL` or the length is 0.
+ */
+int arch_write(const char *buffer, size_t length);
 
 #endif// KERNEL_ARCH_H
