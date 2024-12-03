@@ -3,7 +3,6 @@
 
 #include "../internal/memcopy.h"
 
-// NOLINTBEGIN
 void *memset(void *dest, int symbol, size_t len)
 {
     uintptr_t destp = (uintptr_t)dest;
@@ -67,4 +66,3 @@ void *memset(void *dest, int symbol, size_t len)
 
     return dest;
 }
-// NOLINTEND

@@ -2,20 +2,24 @@
 #define KLIBC_INTERNAL_STDIO_IMPL_H 1
 
 #include <compiler.h>
-#include <stddef.h>
 #include <klibc/stdio.h>
+#include <lock.h>
+#include <stddef.h>
+
+#define LOCK_STREAM(stream) (mutex_try_lock(&stream->lock))
+#define UNLOCK_STREAM(stream) (mutex_unlock(&stream->lock))
 
 #define NL_ARGMAX 9
 
 #define UNGET 9
 
-#define FILE_PERM 1
-#define FILE_NO_READ 4
-#define FILE_NO_WRITE 8
-#define FILE_EOF 16
-#define FILE_ERROR 32
-#define FILE_SVB 64
-#define FILE_APPEND 128
+#define FILE_PERM 1u
+#define FILE_NO_READ 4u
+#define FILE_NO_WRITE 8u
+#define FILE_EOF 16u
+#define FILE_ERROR 32u
+#define FILE_SVB 64u
+#define FILE_APPEND 128u
 
 struct _IO_FILE
 {
@@ -28,13 +32,14 @@ struct _IO_FILE
     void *cookie;
     size_t buf_size;
     int offset;
-    int mode;
+    unsigned int mode;
     int lbf;
+    struct mutex lock;
 };
 
-__LOCAL int __towrite(FILE *file);
-__LOCAL size_t __stdio_write(FILE *file, const unsigned char *buf, size_t len);
-__LOCAL size_t __fwrite(const unsigned char *restrict str, size_t length, FILE *restrict file);
-__LOCAL int __overflow(FILE *file, int ch);
+__LOCAL int __towrite(FILE *stream);
+__LOCAL size_t __stdio_write(FILE *stream, const unsigned char *buf, size_t len);
+__LOCAL size_t __fwrite(const unsigned char *restrict str, size_t length, FILE *restrict stream);
+__LOCAL int __overflow(FILE *stream, int sym);
 
 #endif// KLIBC_INTERNAL_STDIO_IMPL_H

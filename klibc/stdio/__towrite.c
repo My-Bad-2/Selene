@@ -1,20 +1,20 @@
 #include "../internal/stdio_impl.h"
 
-int __towrite(FILE *file)
+int __towrite(FILE *stream)
 {
-    file->mode |= file->mode - 1;
+    stream->mode |= stream->mode - 1;
 
-    if (file->flags & FILE_NO_WRITE) {
-        file->flags |= FILE_ERROR;
+    if (stream->flags & FILE_NO_WRITE) {
+        stream->flags |= FILE_ERROR;
         return EOF;
     }
 
-    // Clear read buffer
-    file->read_pos = file->read_end = 0;
+
+    stream->read_pos = stream->read_end = NULL;
 
     // Activate write through the buffer
-    file->write_pos = file->write_base = file->buf;
-    file->write_end = file->buf + file->buf_size;
+    stream->write_pos = stream->write_base = stream->buf;
+    stream->write_end = stream->buf + stream->buf_size;
 
     return 0;
 }

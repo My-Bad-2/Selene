@@ -1,14 +1,16 @@
 #include "../internal/stdio_impl.h"
 
-int __overflow(FILE *file, int ch)
+int __overflow(FILE *stream, int sym)
 {
-    unsigned char c = ch;
+    unsigned char symbol = sym;
 
-    if (!file->write_end && __towrite(file)) { return EOF; }
+    if (!stream->write_end && __towrite(stream)) { return EOF; }
 
-    if ((file->write_pos != file->write_end) && (c != file->lbf)) { return *file->write_pos++ = c; }
+    if ((stream->write_pos != stream->write_end) && (symbol != stream->lbf)) {
+        return *stream->write_pos++ = symbol;
+    }
 
-    if (file->write(file, &c, 1) != 1) { return EOF; }
+    if (stream->write(stream, &symbol, 1) != 1) { return EOF; }
 
-    return c;
+    return symbol;
 }

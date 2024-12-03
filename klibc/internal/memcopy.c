@@ -1,7 +1,6 @@
 #include "memcopy.h"
 #include <stddef.h>
 
-// NOLINTBEGIN
 void wordcopy_fwd_aligned(unsigned long dstp, unsigned long srcp, size_t len)
 {
     op_t a0, a1;
@@ -153,5 +152,3 @@ int memcmp_bytes(op_t byte1, op_t byte2)
     return a0 - b0;
 }
 #endif
-
-// NOLINTEND

@@ -3,7 +3,7 @@
 
 #include "../internal/memcopy.h"
 
-// NOLINTNEXTLINE
+
 void *memcpy(void *__restrict dest, const void *__restrict src, size_t length)
 {
     uintptr_t destp = (uintptr_t)dest;
@@ -14,7 +14,7 @@ void *memcpy(void *__restrict dest, const void *__restrict src, size_t length)
         // Copy just a few bytes to make `destp` aligned
         length -= (-destp) % OPSIZ;
 
-        // NOLINTNEXTLINE
+
         BYTE_COPY_FWD(destp, srcp, (-destp) % OPSIZ);
 
         // Copy from `srcp` to `destp` taking advantage of the known alignment
@@ -23,7 +23,7 @@ void *memcpy(void *__restrict dest, const void *__restrict src, size_t length)
     }
 
     // Byte memory operations to copy a few bytes.
-    // NOLINTNEXTLINE
+
     BYTE_COPY_FWD(destp, srcp, length);
 
     return dest;

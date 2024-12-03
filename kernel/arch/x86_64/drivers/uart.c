@@ -19,9 +19,7 @@ uint8_t uart_read_reg(uint16_t port, uint16_t reg)
 void uart_putc(uint8_t symbol, uint16_t port)
 {
     while (!(uart_read_reg(port, UART_LINE_STATUS) & UART_LINE_TRANSMITTER_BUF_EMPTY)) {
-        // NOLINTBEGIN
         arch_pause();
-        // NOLINTEND
     }
 
     uart_write_reg(port, UART_DATA, symbol);

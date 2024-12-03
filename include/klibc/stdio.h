@@ -19,11 +19,6 @@ __CDECLS_BEGIN
 
 typedef struct _IO_FILE FILE;
 
-typedef union fpos_t {
-    char __opaque[16];
-    long long __lldata;
-} fpos_t;
-
 extern FILE *const stdin;
 extern FILE *const stdout;
 extern FILE *const stderr;

@@ -191,70 +191,70 @@ union arg {
 static void pop_arg(union arg *arg, int type, va_list *ap)
 {
     switch (type) {
-    case PTR:
-        arg->p = va_arg(*ap, void *);
-        break;
-    case INT:
-        arg->i = va_arg(*ap, unsigned int);
-        break;
-    case UINT:
-        arg->i = va_arg(*ap, unsigned int);
-        break;
-    case LONG:
-        arg->i = va_arg(*ap, long);
-        break;
-    case ULONG:
-        arg->i = va_arg(*ap, unsigned long);
-        break;
-    case ULLONG:
-        arg->i = va_arg(*ap, unsigned long long);
-        break;
-    case SHORT:
-        arg->i = (short)va_arg(*ap, int);
-        break;
-    case USHORT:
-        arg->i = (unsigned short)va_arg(*ap, int);
-        break;
-    case CHAR:
-        arg->i = (signed char)va_arg(*ap, int);
-        break;
-    case UCHAR:
-        arg->i = (unsigned char)va_arg(*ap, int);
-        break;
-    case LLONG:
-        arg->i = va_arg(*ap, long long);
-        break;
-    case SIZET:
-        arg->i = va_arg(*ap, size_t);
-        break;
-    case IMAX:
-        arg->i = va_arg(*ap, intmax_t);
-        break;
-    case UMAX:
-        arg->i = va_arg(*ap, uintmax_t);
-        break;
-    case PDIFF:
-        arg->i = va_arg(*ap, ptrdiff_t);
-        break;
-    case UIPTR:
-        arg->i = (uintptr_t)va_arg(*ap, void *);
-        break;
+        case PTR:
+            arg->p = va_arg(*ap, void *);
+            break;
+        case INT:
+            arg->i = va_arg(*ap, unsigned int);
+            break;
+        case UINT:
+            arg->i = va_arg(*ap, unsigned int);
+            break;
+        case LONG:
+            arg->i = va_arg(*ap, long);
+            break;
+        case ULONG:
+            arg->i = va_arg(*ap, unsigned long);
+            break;
+        case ULLONG:
+            arg->i = va_arg(*ap, unsigned long long);
+            break;
+        case SHORT:
+            arg->i = (short)va_arg(*ap, int);
+            break;
+        case USHORT:
+            arg->i = (unsigned short)va_arg(*ap, int);
+            break;
+        case CHAR:
+            arg->i = (signed char)va_arg(*ap, int);
+            break;
+        case UCHAR:
+            arg->i = (unsigned char)va_arg(*ap, int);
+            break;
+        case LLONG:
+            arg->i = va_arg(*ap, long long);
+            break;
+        case SIZET:
+            arg->i = va_arg(*ap, size_t);
+            break;
+        case IMAX:
+            arg->i = va_arg(*ap, intmax_t);
+            break;
+        case UMAX:
+            arg->i = va_arg(*ap, uintmax_t);
+            break;
+        case PDIFF:
+            arg->i = va_arg(*ap, ptrdiff_t);
+            break;
+        case UIPTR:
+            arg->i = (uintptr_t)va_arg(*ap, void *);
+            break;
 #ifdef USE_FPU
-    case DBL:
-        arg->f = va_arg(*ap, double);
-        break;
-    case LDBL:
-        arg->f = va_arg(*ap, long double);
+        case DBL:
+            arg->f = va_arg(*ap, double);
+            break;
+        case LDBL:
+            arg->f = va_arg(*ap, long double);
 #endif// USE_FPU
     }
 }
 
-static void out(FILE *file, const char *str, size_t length)
+static void out(FILE *stream, const char *str, size_t length)
 {
-    if (!ferror(file)) { __fwrite((const void *)str, length, file); }
+    if (!ferror(stream)) { __fwrite((const void *)str, length, stream); }
 }
 
-static void pad(FILE *file, char c, int width, int length, int flags)
+static void pad(FILE *stream, char c, int width, int length, int flags)
 {
     char pad[256];
 
@@ -264,9 +264,9 @@ static void pad(FILE *file, char c, int width, int length, int flags)
 
     memset(pad, c, ((size_t)length > sizeof(pad)) ? sizeof(pad) : length);
 
-    for (; (size_t)length >= sizeof(pad); length -= sizeof(pad)) { out(file, pad, sizeof(pad)); }
+    for (; (size_t)length >= sizeof(pad); length -= sizeof(pad)) { out(stream, pad, sizeof(pad)); }
 
-    out(file, pad, length);
+    out(stream, pad, length);
 }
 
 static const char hex_digits[16] = "0123456789ABCDEF";
@@ -312,7 +312,7 @@ static int get_int(char **str)
     return i;
 }
 
-static int printf_core(FILE *file, const char *fmt, va_list *ap, union arg *nl_arg, int *nl_type)
+static int printf_core(FILE *stream, const char *fmt, va_list *ap, union arg *nl_arg, int *nl_type)
 {
     char *a, *z, *str = (char *)fmt;
     unsigned int l10n = 0;
@@ -347,13 +347,13 @@ static int printf_core(FILE *file, const char *fmt, va_list *ap, union arg *nl_a
 
         for (a = str; *str && *str != '%'; str++) {}
 
-        for (z = str; str[0] == '%'; z++, str += 2) {}
+        for (z = str; str[0] == '%' && str[1] == '%'; z++, str += 2) {}
 
         if (z - a > INT_MAX - count) { goto overflow; }
 
         length = z - a;
 
-        if (file) { out(file, a, length); }
+        if (stream) { out(stream, a, length); }
 
         if (length) { continue; }
 
@@ -366,15 +366,15 @@ static int printf_core(FILE *file, const char *fmt, va_list *ap, union arg *nl_a
             str++;
         }
 
-        for (flags = 0; ((unsigned int)*str - ' ' < 32) && (FLAG_MASK & (1u << (*str - ' ')));
+        for (flags = 0; (((unsigned int)*str - ' ') < 32) && (FLAG_MASK & (1u << (*str - ' ')));
           str++) {
-            flags |= 1u << (*str-- - ' ');
+            flags |= 1u << (*str - ' ');
         }
 
         if (*str == '*') {
             if (isdigit(str[1]) && str[2] == '$') {
                 l10n = 1;
-                if (!file) {
+                if (!stream) {
                     nl_type[str[1] - '0'] = INT;
                     width = 0;
                 } else {
@@ -383,7 +383,7 @@ static int printf_core(FILE *file, const char *fmt, va_list *ap, union arg *nl_a
 
                 str += 3;
             } else if (!l10n) {
-                width = file ? va_arg(*ap, int) : 0;
+                width = stream ? va_arg(*ap, int) : 0;
                 str++;
             } else {
                 goto invalid;
@@ -400,7 +400,7 @@ static int printf_core(FILE *file, const char *fmt, va_list *ap, union arg *nl_a
         // Read precision
         if (*str == '.' && str[1] == '*') {
             if (isdigit(str[2]) && str[3] == '$') {
-                if (!file) {
+                if (!stream) {
                     nl_type[str[2] - '0'] = INT;
                     precision = 0;
                 } else {
@@ -409,7 +409,7 @@ static int printf_core(FILE *file, const char *fmt, va_list *ap, union arg *nl_a
 
                 str += 4;
             } else if (!l10n) {
-                precision = file ? va_arg(*ap, int) : 0;
+                precision = stream ? va_arg(*ap, int) : 0;
                 str += 2;
             } else {
                 goto invalid;
@@ -441,22 +441,22 @@ static int printf_core(FILE *file, const char *fmt, va_list *ap, union arg *nl_a
             if (arg_pos >= 0) { goto invalid; }
         } else {
             if (arg_pos >= 0) {
-                if (!file) {
+                if (!stream) {
                     nl_type[arg_pos] = state;
                 } else {
                     arg = nl_arg[arg_pos];
                 }
-            } else if (file) {
+            } else if (stream) {
                 pop_arg(&arg, state, ap);
             } else {
                 return 0;
             }
         }
 
-        if (!file) { continue; }
+        if (!stream) { continue; }
 
         // Donot process any new directives once in error state.
-        if (ferror(file)) { return -1; }
+        if (ferror(stream)) { return -1; }
 
         z = buf + sizeof(buf);
         prefix = "-+   0X0x";
@@ -468,85 +468,87 @@ static int printf_core(FILE *file, const char *fmt, va_list *ap, union arg *nl_a
         if (flags & LEFT_ADJ) { flags &= ~ZERO_PAD; }
 
         switch (t) {
-        case 'n':
-            switch (ps) {
-            case BARE:
-                *(int *)arg.p = count;
-                break;
-            case LPRE:
-                *(long *)arg.p = count;
-                break;
-            case LLPRE:
-                *(long long *)arg.p = count;
-                break;
-            case HPRE:
-                *(unsigned short *)arg.p = count;
-                break;
-            case HHPRE:
-                *(unsigned char *)arg.p = count;
-                break;
-            case ZTPRE:
-                *(size_t *)arg.p = count;
-                break;
-            case JPRE:
-                *(uintmax_t *)arg.p = count;
-                break;
-            }
-            continue;
-        case 'p':
-            precision = MAX((size_t)precision, 2 * sizeof(void *));
-            t = 'x';
-            flags |= ALT_FORM;
-        case 'x':
-        case 'X':
-            a = fmt_hex(arg.i, z, t & 32);
-            if (arg.i && (flags & ALT_FORM)) {
-                prefix += (t >> 4);
-                pl = 2;
-            }
-            goto ifmt_tail;
-        case 'o':
-            a = fmt_octal(arg.i, z);
-            if ((flags & ALT_FORM) && precision < (z - a + 1)) { precision = z - a + 1; }
-            goto ifmt_tail;
-        case 'd':
-        case 'i':
-            pl = 1;
+            case 'n':
+                switch (ps) {
+                    case BARE:
+                        *(int *)arg.p = count;
+                        break;
+                    case LPRE:
+                        *(long *)arg.p = count;
+                        break;
+                    case LLPRE:
+                        *(long long *)arg.p = count;
+                        break;
+                    case HPRE:
+                        *(unsigned short *)arg.p = count;
+                        break;
+                    case HHPRE:
+                        *(unsigned char *)arg.p = count;
+                        break;
+                    case ZTPRE:
+                        *(size_t *)arg.p = count;
+                        break;
+                    case JPRE:
+                        *(uintmax_t *)arg.p = count;
+                        break;
+                }
+                continue;
+            case 'p':
+                precision = MAX((size_t)precision, 2 * sizeof(void *));
+                t = 'x';
+                flags |= ALT_FORM;
+            case 'x':
+            case 'X':
+                a = fmt_hex(arg.i, z, t & 32);
+                if (arg.i && (flags & ALT_FORM)) {
+                    prefix += (t >> 4);
+                    pl = 2;
+                }
+                goto ifmt_tail;
+            case 'o':
+                a = fmt_octal(arg.i, z);
+                if ((flags & ALT_FORM) && precision < (z - a + 1)) { precision = z - a + 1; }
+                goto ifmt_tail;
+            case 'd':
+            case 'i':
+                pl = 1;
 
-            if (arg.i > INTMAX_MAX) {
-                arg.i = --arg.i;
-            } else if (flags & MARK_POS) {
-                prefix++;
-            } else if (flags & PAD_POS) {
-                prefix += 2;
-            } else {
-                pl = 0;
-            }
-        case 'u':
-            a = fmt_unsigned(arg.i, z);
-        ifmt_tail:
-            if (xp && precision < 0) { goto overflow; }
+                if (arg.i > INTMAX_MAX) {
+                    arg.i = -arg.i;
+                } else if (flags & MARK_POS) {
+                    prefix++;
+                } else if (flags & PAD_POS) {
+                    prefix += 2;
+                } else {
+                    pl = 0;
+                }
+            case 'u':
+                a = fmt_unsigned(arg.i, z);
+            ifmt_tail:
+                if (xp && precision < 0) { goto overflow; }
 
-            if (xp) { flags &= ~ZERO_PAD; }
+                if (xp) { flags &= ~ZERO_PAD; }
 
-            if (!arg.i && !precision) {
-                a = z;
+                if (!arg.i && !precision) {
+                    a = z;
+                    break;
+                }
+
+                precision = MAX(precision, z - a + !arg.i);
                 break;
-            }
-
-            precision = MAX(precision, z - a + !arg.i);
-            break;
-        case 'c':
-            *(a = z - (precision = 1)) = arg.i;
-            flags &= ~ZERO_PAD;
-            break;
-        case 's':
-            a = arg.p ? (char *)arg.p : "(null)";
-            z = a + strnlen(a, precision < 0 ? INT_MAX : precision);
-            if (precision < 0 && *z) { goto overflow; }
-            precision = z - a;
-            flags &= ~ZERO_PAD;
-            break;
+            case 'c':
+                precision = 1;
+                a = z - precision;
+                *a = arg.i;
+                flags &= ~ZERO_PAD;
+                break;
+            case 's':
+                a = arg.p ? arg.p : "(null)";
+                z = a + strnlen(a, precision < 0 ? INT_MAX : precision);
+                if (precision < 0 && *z) { goto overflow; }
+                precision = z - a;
+                flags &= ~ZERO_PAD;
+                break;
         }
 
         if (precision < z - a) { precision = z - a; }
@@ -557,21 +559,21 @@ static int printf_core(FILE *file, const char *fmt, va_list *ap, union arg *nl_a
 
         if (width > INT_MAX - count) { goto overflow; }
 
-        pad(file, ' ', width, pl + precision, flags);
+        pad(stream, ' ', width, pl + precision, flags);
 
-        out(file, prefix, pl);
+        out(stream, prefix, pl);
 
-        pad(file, '0', width, pl + precision, flags ^ ZERO_PAD);
-        pad(file, '0', precision, z - a, 0);
+        pad(stream, '0', width, pl + precision, flags ^ ZERO_PAD);
+        pad(stream, '0', precision, z - a, 0);
 
-        out(file, a, z - a);
+        out(stream, a, z - a);
 
-        pad(file, ' ', width, pl + precision, flags ^ LEFT_ADJ);
+        pad(stream, ' ', width, pl + precision, flags ^ LEFT_ADJ);
 
         length = width;
     }
 
-    if (file) { return count; }
+    if (stream) { return count; }
 
     if (!l10n) { return 0; }
 
@@ -605,6 +607,8 @@ int vfprintf(FILE *restrict stream, const char *restrict format, va_list arg)
         return -1;
     }
 
+    LOCK_STREAM(stream);
+
     old_err = stream->flags & FILE_ERROR;
     stream->flags &= ~FILE_ERROR;
 
@@ -634,6 +638,8 @@ int vfprintf(FILE *restrict stream, const char *restrict format, va_list arg)
     if (ferror(stream)) { ret = -1; }
 
     stream->flags |= old_err;
+
+    UNLOCK_STREAM(stream);
 
     va_end(ap);
     return ret;

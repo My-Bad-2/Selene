@@ -1,7 +1,7 @@
 #include "../internal/stdio_impl.h"
 
-#include <limits.h>
 #include <klibc/string.h>
+#include <limits.h>
 
 struct cookie
 {
@@ -46,7 +46,7 @@ int vsnprintf(char *restrict buffer, size_t maxlen, const char *restrict format,
         .len = maxlen ? (maxlen - 1) : 0,
     };
 
-    FILE file = {
+    FILE stream = {
         .lbf = EOF,
         .write = sn_write,
         .buf = buf,
@@ -55,7 +55,7 @@ int vsnprintf(char *restrict buffer, size_t maxlen, const char *restrict format,
 
     *cookie.src = 0;
 
-    return vfprintf(&file, format, arg);
+    return vfprintf(&stream, format, arg);
 }
 
 int vsprintf(char *restrict buffer, const char *restrict format, va_list arg)

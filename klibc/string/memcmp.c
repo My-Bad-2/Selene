@@ -2,48 +2,47 @@
 
 #include "../internal/memcopy.h"
 
-// NOLINTBEGIN
 static int memcmp_common_alignment(unsigned long srcp1, unsigned long srcp2, size_t len)
 {
     op_t a0, a1;
     op_t b0, b1;
 
     switch (len % 4) {
-    default:
-    case 2:
-        a0 = ((op_t *)srcp1)[0];
-        b0 = ((op_t *)srcp2)[0];
+        default:
+        case 2:
+            a0 = ((op_t *)srcp1)[0];
+            b0 = ((op_t *)srcp2)[0];
 
-        srcp1 -= 2 * OPSIZ;
-        srcp2 -= 2 * OPSIZ;
-        len += 2;
+            srcp1 -= 2 * OPSIZ;
+            srcp2 -= 2 * OPSIZ;
+            len += 2;
 
-        goto do1;
-    case 3:
-        a1 = ((op_t *)srcp1)[0];
-        b1 = ((op_t *)srcp2)[0];
+            goto do1;
+        case 3:
+            a1 = ((op_t *)srcp1)[0];
+            b1 = ((op_t *)srcp2)[0];
 
-        srcp1 -= OPSIZ;
-        srcp2 -= OPSIZ;
-        len++;
+            srcp1 -= OPSIZ;
+            srcp2 -= OPSIZ;
+            len++;
 
-        goto do2;
-    case 0:
-        if (OP_T_THRES <= 3 * OPSIZ && len == 0) { return 0; }
+            goto do2;
+        case 0:
+            if (OP_T_THRES <= 3 * OPSIZ && len == 0) { return 0; }
 
-        a0 = ((op_t *)srcp1)[0];
-        b0 = ((op_t *)srcp2)[0];
+            a0 = ((op_t *)srcp1)[0];
+            b0 = ((op_t *)srcp2)[0];
 
-        goto do3;
-    case 1:
-        a1 = ((op_t *)srcp1)[0];
-        b1 = ((op_t *)srcp2)[0];
+            goto do3;
+        case 1:
+            a1 = ((op_t *)srcp1)[0];
+            b1 = ((op_t *)srcp2)[0];
 
-        srcp1 += OPSIZ;
-        srcp2 += OPSIZ;
-        len--;
+            srcp1 += OPSIZ;
+            srcp2 += OPSIZ;
+            len--;
 
-        if (OP_T_THRES <= 3 * OPSIZ && len == 0) { goto do0; }
+            if (OP_T_THRES <= 3 * OPSIZ && len == 0) { goto do0; }
     }
 
     do {
@@ -94,45 +93,45 @@ static int memcmp_not_common_alignment(unsigned long srcp1, unsigned long srcp2,
     srcp1 &= -OPSIZ;
 
     switch (len % 4) {
-    default:
-    case 2:
-        a1 = ((op_t *)srcp1)[0];
-        a2 = ((op_t *)srcp1)[1];
-        b2 = ((op_t *)srcp2)[0];
+        default:
+        case 2:
+            a1 = ((op_t *)srcp1)[0];
+            a2 = ((op_t *)srcp1)[1];
+            b2 = ((op_t *)srcp2)[0];
 
-        srcp1 -= 1 * OPSIZ;
-        srcp2 -= 2 * OPSIZ;
-        len += 2;
+            srcp1 -= 1 * OPSIZ;
+            srcp2 -= 2 * OPSIZ;
+            len += 2;
 
-        goto do1;
-    case 3:
-        a0 = ((op_t *)srcp1)[0];
-        a1 = ((op_t *)srcp1)[1];
-        b1 = ((op_t *)srcp2)[0];
+            goto do1;
+        case 3:
+            a0 = ((op_t *)srcp1)[0];
+            a1 = ((op_t *)srcp1)[1];
+            b1 = ((op_t *)srcp2)[0];
 
-        srcp2 -= 1 * OPSIZ;
-        len++;
+            srcp2 -= 1 * OPSIZ;
+            len++;
 
-        goto do2;
-    case 0:
-        if (OP_T_THRES <= 3 * OPSIZ && len == 0) { return 0; }
+            goto do2;
+        case 0:
+            if (OP_T_THRES <= 3 * OPSIZ && len == 0) { return 0; }
 
-        a3 = ((op_t *)srcp1)[0];
-        a0 = ((op_t *)srcp1)[1];
-        b0 = ((op_t *)srcp2)[0];
+            a3 = ((op_t *)srcp1)[0];
+            a0 = ((op_t *)srcp1)[1];
+            b0 = ((op_t *)srcp2)[0];
 
-        srcp1 += 1 * OPSIZ;
-        goto do3;
-    case 1:
-        a2 = ((op_t *)srcp1)[0];
-        a3 = ((op_t *)srcp1)[1];
-        b3 = ((op_t *)srcp2)[0];
+            srcp1 += 1 * OPSIZ;
+            goto do3;
+        case 1:
+            a2 = ((op_t *)srcp1)[0];
+            a3 = ((op_t *)srcp1)[1];
+            b3 = ((op_t *)srcp2)[0];
 
-        srcp1 += 2 * OPSIZ;
-        srcp2 += 1 * OPSIZ;
-        len--;
+            srcp1 += 2 * OPSIZ;
+            srcp2 += 1 * OPSIZ;
+            len--;
 
-        if (OP_T_THRES <= 3 * OPSIZ && len == 0) { goto do0; }
+            if (OP_T_THRES <= 3 * OPSIZ && len == 0) { goto do0; }
     }
 
     do {
@@ -227,5 +226,3 @@ int memcmp(const void *src1, const void *src2, size_t len)
 
     return 0;
 }
-
-// NOLINTEND

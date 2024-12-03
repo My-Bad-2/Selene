@@ -34,10 +34,10 @@ doxygen_output_dir = get_variable('doxygen_output_dir', meson.project_build_root
 doxygen_input = get_variable(
     'doxygen_input',
     [
+        meson.project_source_root() / 'include',
         meson.project_source_root() / 'kernel',
         meson.project_source_root() / 'klibc',
-        meson.project_source_root() / 'include',
-        # meson.project_source_root() / 'docs',
+        meson.project_source_root() / 'misc',
         meson.project_source_root() / 'README.md',
     ],
 )

@@ -17,12 +17,12 @@ void *memmove(void *dest, const void *src, size_t length)
         if (length >= OP_T_THRES) {
             length -= destp % OPSIZ;
 
-            // NOLINTNEXTLINE
+
             BYTE_COPY_BWD(destp, srcp, destp % OPSIZ);
             WORD_COPY_BWD(destp, srcp, length, length);
         }
 
-        // NOLINTNEXTLINE
+
         BYTE_COPY_BWD(destp, srcp, length);
     }
 

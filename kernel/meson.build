@@ -11,6 +11,6 @@ kernel = executable(
         include_directories('../include'),
         include_directories('../include/klibc'),
     ],
-    link_with: klibc,
+    link_with: [klibc, misc],
     install: false,
 )

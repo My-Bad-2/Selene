@@ -168,6 +168,7 @@ limine_dep = dependency('limine')
 clangtidy_files = []
 
 subdir('klibc')
+subdir('misc')
 subdir('kernel')
 
 ###################

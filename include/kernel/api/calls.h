@@ -14,8 +14,8 @@
  */
 struct iovec
 {
-    void *buffer; ///< Starting address of the buffer.
-    size_t len; ///< Length of the buffer in bytes.
+    void *buffer;///< Starting address of the buffer.
+    size_t len;  ///< Length of the buffer in bytes.
 };
 
 /**

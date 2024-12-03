@@ -1,7 +1,10 @@
 #include "../internal/stdio_impl.h"
 
-int ferror(FILE *file)
+int ferror(FILE *stream)
 {
-    int ret = !!(file->flags & FILE_ERROR);
+    LOCK_STREAM(stream);
+    int ret = !!(stream->flags & FILE_ERROR);
+    UNLOCK_STREAM(stream);
+
     return ret;
 }

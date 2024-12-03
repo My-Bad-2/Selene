@@ -8,6 +8,7 @@ __LOCAL FILE __stderr_FILE = {
     .flags = FILE_PERM | FILE_NO_READ | FILE_SVB,
     .lbf = -1,
     .write = __stdio_write,
+    .lock = INITIALIZE_MUTEX,
 };
 
 FILE *const stderr = &__stderr_FILE;

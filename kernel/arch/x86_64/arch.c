@@ -1,8 +1,6 @@
 #include <kernel/arch/x86_64/arch.h>
 #include <kernel/arch/x86_64/drivers/uart.h>
 
-// NOLINTBEGIN
-
 /**
  * @note This function enters an infinite loop, either halting the CPU or
  * disabling interrupts and halting repeatedly.
@@ -48,8 +46,6 @@ void inpw(uint16_t port, uint16_t *val) { asm volatile("inw %1, %0" : "=a"(*val)
  * @details Uses the `inl` assembly instruction to read the value.
  */
 void inpl(uint16_t port, uint32_t *val) { asm volatile("inl %1, %0" : "=a"(*val) : "Nd"(port)); }
-
-// NOLINTEND
 
 /**
  * @details Sets up the primary UART (COM1) for serial communication. This

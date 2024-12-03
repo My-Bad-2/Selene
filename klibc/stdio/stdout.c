@@ -2,13 +2,13 @@
 
 static unsigned char buffer[BUFSIZ + UNGET] = {};
 
-static size_t __stdout_write(FILE *file, const unsigned char *str, size_t len)
+static size_t __stdout_write(FILE *stream, const unsigned char *str, size_t len)
 {
-    file->write = __stdio_write;
+    stream->write = __stdio_write;
 
-    if (!(file->flags & FILE_SVB)) { file->lbf = -1; }
+    if (!(stream->flags & FILE_SVB)) { stream->lbf = -1; }
 
-    return __stdio_write(file, str, len);
+    return __stdio_write(stream, str, len);
 }
 
 __LOCAL FILE __stdout_FILE = {
@@ -17,6 +17,7 @@ __LOCAL FILE __stdout_FILE = {
     .flags = FILE_PERM | FILE_NO_READ,
     .lbf = '\n',
     .write = __stdout_write,
+    .lock = INITIALIZE_MUTEX,
 };
 
 FILE *const stdout = &__stdout_FILE;
