@@ -11,6 +11,8 @@ kernel = executable(
     include_directories('../include'),
     include_directories('../include/klibc'),
   ],
+  c_args: '-DLIMINE_API_REVISION=2',
+  cpp_args: '-DLIMINE_API_REVISION=2',
   link_with: [klibc, misc],
   install: false,
 )
