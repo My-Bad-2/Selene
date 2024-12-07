@@ -6,31 +6,28 @@
 
 __CDECLS_BEGIN
 
-typedef struct
-{
-    int quot;
-    int rem;
+typedef struct {
+  int quot;
+  int rem;
 } div_t;
 
-typedef struct
-{
-    long int quot;
-    long int rem;
+typedef struct {
+  long int quot;
+  long int rem;
 } ldiv_t;
 
-typedef struct
-{
-    long long int quot;
-    long long int rem;
+typedef struct {
+  long long int quot;
+  long long int rem;
 } lldiv_t;
 
 long int strtol(const char *restrict nptr, char **restrict endptr, int base) __NONNULL((1));
 unsigned long int strtoul(const char *restrict nptr, char **restrict endptr, int base)
-  __NONNULL((1));
+    __NONNULL((1));
 
 long long int strtoll(const char *restrict nptr, char **restrict endptr, int base) __NONNULL((1));
 unsigned long long int strtoull(const char *restrict nptr, char **restrict endptr, int base)
-  __NONNULL((1));
+    __NONNULL((1));
 
 int atoi(const char *nptr) __PURE __NONNULL((1));
 long atol(const char *nptr) __PURE __NONNULL((1));
@@ -49,4 +46,4 @@ extern void abort(void) __NO_RETURN;
 
 __CDECLS_END
 
-#endif// KLIBC_STDLIB_H
+#endif  // KLIBC_STDLIB_H

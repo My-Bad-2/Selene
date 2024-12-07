@@ -32,14 +32,14 @@ doxygen_output_dir = get_variable('doxygen_output_dir', meson.project_build_root
 
 # Input directories to process
 doxygen_input = get_variable(
-    'doxygen_input',
-    [
-        meson.project_source_root() / 'include',
-        meson.project_source_root() / 'kernel',
-        meson.project_source_root() / 'klibc',
-        meson.project_source_root() / 'misc',
-        meson.project_source_root() / 'README.md',
-    ],
+  'doxygen_input',
+  [
+    meson.project_source_root() / 'include',
+    meson.project_source_root() / 'kernel',
+    meson.project_source_root() / 'klibc',
+    meson.project_source_root() / 'misc',
+    meson.project_source_root() / 'README.md',
+  ],
 )
 
 # This variable can be used to supply additional entries to the Doxygen input
@@ -49,14 +49,14 @@ doxygen_input_additional = get_variable('doxygen_input_additional', [])
 # Process into the proper format: multiple entries are separated by spaces
 doxygen_input_parsed = ''
 foreach item : doxygen_input + doxygen_input_additional
-    doxygen_input_parsed += item + ' '
+  doxygen_input_parsed += item + ' '
 endforeach
 
 # Patterns and files to exclude from processing
 # Doxygen expects multiple entries to be separated by spaces!
 doxygen_excludes = get_variable(
-    'doxygen_excludes',
-    'catch.hpp',
+  'doxygen_excludes',
+  'catch.hpp',
 )
 
 # Use a markdown file as the Doxygen main page
@@ -67,32 +67,32 @@ doxygen_mainpage_md = get_variable('doxygen_mainpage_md', meson.project_source_r
 #################################
 
 doxyfile_config_data = {
-    'PROJECT_NAME': doxygen_project_name,
-    'PROJECT_VERSION': doxygen_version,
-    'PROJECT_DESCRIPTION': doxygen_description,
-    'OUTPUT_DIR': doxygen_output_dir,
-    'INPUT_DIRS': doxygen_input_parsed,
-    'EXCLUDE_PATTERNS': doxygen_excludes,
-    'MD_AS_MAINPAGE': doxygen_mainpage_md,
-    'AWESOME_CSS_DIR': awesome_css.get_variable('awesome_css_dir'),
-    'HEADER_HTML_DIR': meson.project_source_root() / 'docs'
+  'PROJECT_NAME': doxygen_project_name,
+  'PROJECT_VERSION': doxygen_version,
+  'PROJECT_DESCRIPTION': doxygen_description,
+  'OUTPUT_DIR': doxygen_output_dir,
+  'INPUT_DIRS': doxygen_input_parsed,
+  'EXCLUDE_PATTERNS': doxygen_excludes,
+  'MD_AS_MAINPAGE': doxygen_mainpage_md,
+  'AWESOME_CSS_DIR': awesome_css.get_variable('awesome_css_dir'),
+  'HEADER_HTML_DIR': meson.project_source_root() / 'docs',
 }
 
 doxyfile_config = configuration_data()
 
 foreach var, value : doxyfile_config_data
-    doxyfile_config.set(var, value)
+  doxyfile_config.set(var, value)
 endforeach
 
 doxyfile_input = get_variable('doxyfile_input', files('Doxyfile.in'))
 
 doxyfile = get_variable(
-    'doxyfile',
-    configure_file(
-        input: doxyfile_input,
-        output: 'Doxyfile',
-        configuration: doxyfile_config_data,
-    ),
+  'doxyfile',
+  configure_file(
+    input: doxyfile_input,
+    output: 'Doxyfile',
+    configuration: doxyfile_config_data,
+  ),
 )
 
 ########################

@@ -12,10 +12,9 @@
  * @struct iovec
  * @brief Represents a buffer and its length for vectorized I/O operations.
  */
-struct iovec
-{
-    void *buffer;///< Starting address of the buffer.
-    size_t len;  ///< Length of the buffer in bytes.
+struct iovec {
+  void *buffer;  ///< Starting address of the buffer.
+  size_t len;    ///< Length of the buffer in bytes.
 };
 
 /**
@@ -26,4 +25,4 @@ struct iovec
  */
 int kernel_writev(struct iovec *buffer, int count);
 
-#endif// KERNEL_API_CALLS_H
+#endif  // KERNEL_API_CALLS_H

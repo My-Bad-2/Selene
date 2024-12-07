@@ -1,20 +1,22 @@
 #include <kernel/arch/x86_64/arch.h>
+#include <kernel/arch/x86_64/cpu/gdt.h>
 #include <kernel/arch/x86_64/drivers/uart.h>
 
 /**
  * @note This function enters an infinite loop, either halting the CPU or
  * disabling interrupts and halting repeatedly.
  */
-void arch_halt(bool interrupts)
-{
-    if (interrupts) {
-        while (true) { arch_hlt(); }
-    } else {
-        while (true) {
-            arch_disable_interrupts();
-            arch_hlt();
-        }
+void arch_halt(bool interrupts) {
+  if (interrupts) {
+    while (true) {
+      arch_hlt();
     }
+  } else {
+    while (true) {
+      arch_disable_interrupts();
+      arch_hlt();
+    }
+  }
 }
 
 /**
@@ -52,21 +54,29 @@ void inpl(uint16_t port, uint32_t *val) { asm volatile("inl %1, %0" : "=a"(*val)
  * function is typically called during system boot to prepare low-level
  * architecture dependencies.
  */
-void arch_initialize() { uart_initialize(COM_PORT1); }
-
-#include <stddef.h>
+void arch_initialize(void) {
+  arch_disable_interrupts();
+  uart_initialize(COM_PORT1);
+  gdt_initialize();
+  arch_enable_interrupts();
+}
 
 /**
  * @details This function sends each character in the buffer to the primary UART
- *          (COM1) using the `uart_putc` function.
+ * (COM1) using the `uart_putc` function.
  */
-int arch_write(const char *buffer, size_t length)
-{
-    if (length == 0) { return 0; }
+int arch_write(const char *buffer, size_t length) {
+  if (length == 0) {
+    return 0;
+  }
 
-    if (buffer == NULL) { return 0; }
+  if (buffer == NULL) {
+    return 0;
+  }
 
-    for (size_t i = 0; i < length; i++) { uart_putc(buffer[i], COM_PORT1); }
+  for (size_t i = 0; i < length; i++) {
+    uart_putc(buffer[i], COM_PORT1);
+  }
 
-    return length;
+  return length;
 }

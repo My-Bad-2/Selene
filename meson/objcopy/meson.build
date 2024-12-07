@@ -38,27 +38,27 @@ native_objcopy_program = meson.get_external_property('objcopy', '', native: true
 ###
 # Check if found, and disable if not
 if host_objcopy_program == ''
-    host_objcopy = disabler()
+  host_objcopy = disabler()
 else
-    host_objcopy = find_program(host_objcopy_program, required: false, disabler: true)
+  host_objcopy = find_program(host_objcopy_program, required: false, disabler: true)
 endif
 
 if native_objcopy_program == ''
-    native_objcopy = disabler()
+  native_objcopy = disabler()
 else
-    native_objcopy = find_program(native_objcopy_program, required: false, disabler: true)
+  native_objcopy = find_program(native_objcopy_program, required: false, disabler: true)
 endif
 
 if host_objcopy.found() == false
-    message(
-        'Host objcopy program not available, .hex and .bin conversion targets will be disabled.',
-    )
+  message(
+    'Host objcopy program not available, .hex and .bin conversion targets will be disabled.',
+  )
 endif
 
 if native_objcopy.found() == false
-    message(
-        'Native objcopy program not available, .hex and .bin conversion targets will be disabled.',
-    )
+  message(
+    'Native objcopy program not available, .hex and .bin conversion targets will be disabled.',
+  )
 endif
 
 ###

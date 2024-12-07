@@ -34,4 +34,4 @@ void uart_initialize(uint16_t port);
  */
 void uart_putc(uint8_t symbol, uint16_t port);
 
-#endif// KERNEL_DRIVERS_UART_H
+#endif  // KERNEL_DRIVERS_UART_H

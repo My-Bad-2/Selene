@@ -1,10 +1,6 @@
 #ifndef KERNEL_DRIVERS_INTERNAL_UART_H
 #define KERNEL_DRIVERS_INTERNAL_UART_H 1
 
-#ifndef KERNEL_DRIVERS_UART_H
-#error "Use this header while building uart only"
-#endif
-
 #define UART_DATA 0
 #define UART_INTERRUPT 1
 #define UART_INTERRUPT_IDENTIFACTOR 2
@@ -53,4 +49,4 @@
 #define UART_FIFO_TRIGGER_LEVEL3 (2u << 6u)
 #define UART_FIFO_TRIGGER_LEVEL4 (3u << 6u)
 
-#endif// KERNEL_DRIVERS_INTERNAL_UART_H
+#endif  // KERNEL_DRIVERS_INTERNAL_UART_H

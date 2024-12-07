@@ -9,61 +9,61 @@ ENTRY(kmain)
 /* process. */
 PHDRS
 {
-    limine_requests PT_LOAD     FLAGS((1 << 1) | (1 << 2)) ; /* Write + Read */
-    text            PT_LOAD     FLAGS((1 << 0) | (1 << 2)) ; /* Execute + Read */
-    rodata          PT_LOAD     FLAGS((1 << 2)) ;            /* Read only */
-    data            PT_LOAD     FLAGS((1 << 1) | (1 << 2)) ; /* Write + Read */
-    dynamic         PT_DYNAMIC  FLAGS((1 << 1) | (1 << 2)) ; /* Dynamic PHDR for relocations */
+  limine_requests PT_LOAD     FLAGS((1 << 1) | (1 << 2)) ; /* Write + Read */
+  text            PT_LOAD     FLAGS((1 << 0) | (1 << 2)) ; /* Execute + Read */
+  rodata          PT_LOAD     FLAGS((1 << 2)) ;            /* Read only */
+  data            PT_LOAD     FLAGS((1 << 1) | (1 << 2)) ; /* Write + Read */
+  dynamic         PT_DYNAMIC  FLAGS((1 << 1) | (1 << 2)) ; /* Dynamic PHDR for relocations */
 }
 
 SECTIONS
 {
-    /* We want to be placed in the topmost 2GiB of the address space, for optimisations */
-    /* and because that is what the Limine spec mandates. */
-    /* Any address in this region will do, but often 0xffffffff80000000 is chosen as */
-    /* that is the beginning of the region. */
-    . = 0xffffffff80000000;
+  /* We want to be placed in the topmost 2GiB of the address space, for optimisations */
+  /* and because that is what the Limine spec mandates. */
+  /* Any address in this region will do, but often 0xffffffff80000000 is chosen as */
+  /* that is the beginning of the region. */
+  . = 0xffffffff80000000;
 
-    /* Define a section to contain the Limine requests and assign it to its own PHDR */
-    .limine_requests : {
-        KEEP(*(.limine_requests_start))
-        KEEP(*(.limine_requests))
-        KEEP(*(.limine_requests_end))
-    } :limine_requests
+  /* Define a section to contain the Limine requests and assign it to its own PHDR */
+  .limine_requests : {
+    KEEP(*(.limine_requests_start))
+    KEEP(*(.limine_requests))
+    KEEP(*(.limine_requests_end))
+  } :limine_requests
 
-    /* Move to the next memory page for .text */
-    . = ALIGN(CONSTANT(MAXPAGESIZE));
+  /* Move to the next memory page for .text */
+  . = ALIGN(CONSTANT(MAXPAGESIZE));
 
-    .text : {
-        *(.text .text.*)
-    } :text
+  .text : {
+    *(.text .text.*)
+  } :text
 
-    /* Move to the next memory page for .rodata */
-    . = ALIGN(CONSTANT(MAXPAGESIZE));
+  /* Move to the next memory page for .rodata */
+  . = ALIGN(CONSTANT(MAXPAGESIZE));
 
-    .rodata : {
-        *(.rodata .rodata.*)
-    } :rodata
+  .rodata : {
+      *(.rodata .rodata.*)
+  } :rodata
 
-    /* Move to the next memory page for .data */
-    . = ALIGN(CONSTANT(MAXPAGESIZE));
+  /* Move to the next memory page for .data */
+  . = ALIGN(CONSTANT(MAXPAGESIZE));
 
-    .data : {
-        *(.data .data.*)
-    } :data
+  .data : {
+    *(.data .data.*)
+  } :data
 
-    /* NOTE: .bss needs to be the last thing mapped to :data, otherwise lots of */
-    /* unnecessary zeros will be written to the binary. */
-    /* If you need, for example, .init_array and .fini_array, those should be placed */
-    /* above this. */
-    .bss : {
-        *(.bss .bss.*)
-        *(COMMON)
-    } :data
+  /* NOTE: .bss needs to be the last thing mapped to :data, otherwise lots of */
+  /* unnecessary zeros will be written to the binary. */
+  /* If you need, for example, .init_array and .fini_array, those should be placed */
+  /* above this. */
+  .bss : {
+    *(.bss .bss.*)
+    *(COMMON)
+  } :data
 
-    /* Discard .note.* and .eh_frame* since they may cause issues on some hosts. */
-    /DISCARD/ : {
-        *(.eh_frame*)
-        *(.note .note.*)
-    }
+  /* Discard .note.* and .eh_frame* since they may cause issues on some hosts. */
+  /DISCARD/ : {
+      *(.eh_frame*)
+      *(.note .note.*)
+  }
 }

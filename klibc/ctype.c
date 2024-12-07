@@ -11,9 +11,8 @@ int isascii(int symbol) { return symbol >= 0 && symbol <= INT8_MAX; }
 
 int isblank(int symbol) { return symbol == ' ' || symbol == '\t'; }
 
-int iscntrl(int symbol)
-{
-    return (symbol >= 0 && symbol <= LAST_CONTROL_CHAR) || symbol == INT8_MAX;
+int iscntrl(int symbol) {
+  return (symbol >= 0 && symbol <= LAST_CONTROL_CHAR) || symbol == INT8_MAX;
 }
 
 int isdigit(int symbol) { return symbol >= '0' && symbol <= '9'; }
@@ -28,9 +27,8 @@ int isspace(int symbol) { return symbol == ' ' || (symbol >= '\t' && symbol <= '
 
 int isupper(int symbol) { return symbol >= 'A' && symbol <= 'Z'; }
 
-int isxdigit(int symbol)
-{
-    return isdigit(symbol) || (symbol >= 'A' && symbol <= 'F') || (symbol >= 'a' && symbol <= 'f');
+int isxdigit(int symbol) {
+  return isdigit(symbol) || (symbol >= 'A' && symbol <= 'F') || (symbol >= 'a' && symbol <= 'f');
 }
 
 int toascii(int symbol) { return (uint32_t)(symbol) & (ASCII_MASK); }

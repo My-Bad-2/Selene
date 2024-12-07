@@ -1,15 +1,15 @@
-#include <kernel/arch/arch.h>
 #include <klibc/stdio.h>
 #include <log.h>
 
-void kmain()
-{
-    arch_initialize();
+#include <kernel/arch/arch.h>
 
-    log_set_level(DEBUG);
-    log_set_quiet(false);
+void kmain(void) {
+  log_set_level(LOG_TRACE);
+  log_set_quiet(false);
 
-    log_info("Hello, World!");
+  arch_initialize();
 
-    arch_halt(true);
+  log_info("Hello, World!");
+
+  arch_halt(true);
 }

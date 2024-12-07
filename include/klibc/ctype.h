@@ -25,4 +25,4 @@ int toascii(int symbol);
 
 __CDECLS_END
 
-#endif// KLIBC_CTYPE_H
+#endif  // KLIBC_CTYPE_H

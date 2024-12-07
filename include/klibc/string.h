@@ -25,4 +25,4 @@ size_t strlen(const char *str) __PURE __NONNULL((1));
 
 __CDECLS_END
 
-#endif// _STRING_H
+#endif  // _STRING_H

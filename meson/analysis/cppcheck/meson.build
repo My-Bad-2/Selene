@@ -22,8 +22,8 @@
 # by the cppcheck.sh script. You are responsible for formatting arguments in this case.
 
 cppcheck_default_paths = [
-    meson.project_source_root() / 'src',
-    meson.project_source_root() / 'test',
+  meson.project_source_root() / 'src',
+  meson.project_source_root() / 'test',
 ]
 
 cppcheck_default_custom_rules = []
@@ -34,28 +34,28 @@ cppcheck_additional_paths = get_variable('cppcheck_additional_paths', [])
 # Include directory search paths for Cppcheck
 cppcheck_includes = get_variable('cppcheck_includes', [])
 if cppcheck_includes.length() > 0
-    cppcheck_includes_processed = ''
-    foreach entry : cppcheck_includes
-        cppcheck_includes_processed += entry + ','
-    endforeach
+  cppcheck_includes_processed = ''
+  foreach entry : cppcheck_includes
+    cppcheck_includes_processed += entry + ','
+  endforeach
 
-    # Convert to array with proper script argument
-    cppcheck_includes_processed = ['-i', cppcheck_includes_processed]
+  # Convert to array with proper script argument
+  cppcheck_includes_processed = ['-i', cppcheck_includes_processed]
 else
-    cppcheck_includes_processed = []
+  cppcheck_includes_processed = []
 endif
 
 # Files to exclude from analysis
 cppcheck_excludes = get_variable('cppcheck_excludes', [])
 if cppcheck_excludes.length() > 0
-    cppcheck_excludes_processed = ''
-    foreach entry : cppcheck_excludes
-        cppcheck_excludes_processed += entry + ','
-    endforeach
-    # Convert to array with proper script argument
-    cppcheck_excludes_processed = ['-e', cppcheck_excludes_processed]
+  cppcheck_excludes_processed = ''
+  foreach entry : cppcheck_excludes
+    cppcheck_excludes_processed += entry + ','
+  endforeach
+  # Convert to array with proper script argument
+  cppcheck_excludes_processed = ['-e', cppcheck_excludes_processed]
 else
-    cppcheck_excludes_processed = []
+  cppcheck_excludes_processed = []
 endif
 
 # Custom rules to use
@@ -63,38 +63,38 @@ cppcheck_custom_rules = get_variable('cppcheck_custom_rules', cppcheck_default_c
 # Add additional rules to the default list
 cppcheck_custom_rules += get_variable('cppcheck_additional_custom_rules', [])
 if cppcheck_custom_rules.length() > 0
-    cppcheck_custom_rules_processed = ''
-    foreach entry : cppcheck_custom_rules
-        cppcheck_custom_rules_processed += entry + ','
-    endforeach
-    # Convert to array with proper script argument
-    cppcheck_custom_rules_processed = ['-r', cppcheck_custom_rules_processed]
+  cppcheck_custom_rules_processed = ''
+  foreach entry : cppcheck_custom_rules
+    cppcheck_custom_rules_processed += entry + ','
+  endforeach
+  # Convert to array with proper script argument
+  cppcheck_custom_rules_processed = ['-r', cppcheck_custom_rules_processed]
 else
-    cppcheck_custom_rules_processed = []
+  cppcheck_custom_rules_processed = []
 endif
 
 # style checks to override
 cppcheck_checks = get_variable('cppcheck_checks', [])
 if cppcheck_checks.length() > 0
-    cppcheck_checks_processed = ''
-    foreach entry : cppcheck_checks
-        cppcheck_checks_processed += entry + ','
-    endforeach
-    # Convert to array with proper script argument
-    cppcheck_checks_processed = ['-c', cppcheck_checks_processed]
+  cppcheck_checks_processed = ''
+  foreach entry : cppcheck_checks
+    cppcheck_checks_processed += entry + ','
+  endforeach
+  # Convert to array with proper script argument
+  cppcheck_checks_processed = ['-c', cppcheck_checks_processed]
 else
-    cppcheck_checks_processed = []
+  cppcheck_checks_processed = []
 endif
 
 cppcheck_default_args = [
-    # getopts arguments
-    cppcheck_includes_processed,
-    cppcheck_excludes_processed,
-    cppcheck_custom_rules_processed,
-    cppcheck_checks_processed,
-    # Positional Arguments
-    cppcheck_paths,
-    cppcheck_additional_paths,
+  # getopts arguments
+  cppcheck_includes_processed,
+  cppcheck_excludes_processed,
+  cppcheck_custom_rules_processed,
+  cppcheck_checks_processed,
+  # Positional Arguments
+  cppcheck_paths,
+  cppcheck_additional_paths,
 ]
 
 cppcheck_args = get_variable('cppcheck_args', cppcheck_default_args)
@@ -107,21 +107,21 @@ cppcheck = find_program('cppcheck', required: false, disabler: true)
 cppcheck_script = files('cppcheck.sh')
 
 if cppcheck.found()
-    run_target(
-        'cppcheck',
-        command: [
-            cppcheck_script,
-            # Supply Arguments
-            cppcheck_args,
-        ],
-    )
+  run_target(
+    'cppcheck',
+    command: [
+      cppcheck_script,
+      # Supply Arguments
+      cppcheck_args,
+    ],
+  )
 
-    run_target(
-        'cppcheck-xml',
-        command: [
-            cppcheck_script,
-            # Enable XML output
-            '-x', # Supply Arguments cppcheck_args,
-        ],
-    )
+  run_target(
+    'cppcheck-xml',
+    command: [
+      cppcheck_script,
+      # Enable XML output
+      '-x', # Supply Arguments cppcheck_args,
+    ],
+  )
 endif

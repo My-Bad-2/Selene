@@ -26,7 +26,7 @@ extern FILE *const stderr;
 int ferror(FILE *stream) __WARN_UNUSED_RESULT __NONNULL((1));
 int feof(FILE *stream) __WARN_UNUSED_RESULT __NONNULL((1));
 size_t fwrite(const void *restrict ptr, size_t size, size_t nmemb, FILE *restrict stream)
-  __NONNULL((4));
+    __NONNULL((4));
 
 int putchar(int ch);
 int putc(int ch, FILE *stream) __NONNULL((2));
@@ -38,14 +38,14 @@ int fprintf(FILE *restrict stream, const char *restrict format, ...) __NONNULL((
 int printf(const char *restrict format, ...);
 int sprintf(char *restrict buffer, const char *restrict format, ...);
 int snprintf(char *restrict buffer, size_t maxlen, const char *restrict format, ...)
-  __PRINTFLIKE(3, 4);
+    __PRINTFLIKE(3, 4);
 
 int vfprintf(FILE *restrict stream, const char *restrict format, va_list arg) __NONNULL((1));
 int vprintf(const char *restrict format, va_list arg);
 int vsprintf(char *restrict buffer, const char *restrict format, va_list arg);
 int vsnprintf(char *restrict buffer, size_t maxlen, const char *restrict format, va_list arg)
-  __PRINTFLIKE(3, 0);
+    __PRINTFLIKE(3, 0);
 
 __CDECLS_END
 
-#endif// KLIBC_STDIO_H
+#endif  // KLIBC_STDIO_H

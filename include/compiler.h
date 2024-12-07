@@ -155,8 +155,8 @@
 #endif
 
 #define WRAP_MACRO(instruction) \
-    do {                        \
-        instruction;            \
-    } while (0);
+  do {                          \
+    instruction;                \
+  } while (0);
 
-#endif// _SYS_DEFS_H
+#endif  // _SYS_DEFS_H

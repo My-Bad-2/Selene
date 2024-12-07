@@ -53,38 +53,37 @@
 __CDECLS_BEGIN
 
 /**
- * @enum LogLevel
+ * @enum log_level
  * @brief Log levels indicating the severity of the log messages.
  */
-enum {
-    LOG_TRACE,///< Trace-level messages for detailed debugging.
-    LOG_DEBUG,///< Debug-level messages for general debugging.
-    LOG_INFO, ///< Informational messages.
-    LOG_WARN, ///< Warning messages indicating potential issues.
-    LOG_ERROR,///< Error messages indicating failures.
-    LOG_FATAL,///< Fatal errors requiring immediate attention.
-    LOG_PANIC,///< Panic-level messages indicating a critical system failure.
+enum log_level {
+  LOG_TRACE,  ///< Trace-level messages for detailed debugging.
+  LOG_DEBUG,  ///< Debug-level messages for general debugging.
+  LOG_INFO,   ///< Informational messages.
+  LOG_WARN,   ///< Warning messages indicating potential issues.
+  LOG_ERROR,  ///< Error messages indicating failures.
+  LOG_FATAL,  ///< Fatal errors requiring immediate attention.
+  LOG_PANIC,  ///< Panic-level messages indicating a critical system failure.
 };
 
 /**
- * @struct LogEvent
+ * @struct log_event
  * @brief Represents a log event containing metadata and formatted message details.
  */
-struct LogEvent
-{
-    va_list ap;      ///< Variable argument list for formatting.
-    const char *fmt; ///< Format string.
-    const char *file;///< Source file name.
-    FILE *stream;    ///< Output stream.
-    int line;        ///< Line number in the source file.
-    int level;       ///< Log level.
+struct log_event {
+  va_list ap;        ///< Variable argument list for formatting.
+  const char *fmt;   ///< Format string.
+  const char *file;  ///< Source file name.
+  FILE *stream;      ///< Output stream.
+  int line;          ///< Line number in the source file.
+  int level;         ///< Log level.
 };
 
 /**
  * @brief Callback function type for log events.
- * @param event Pointer to the LogEvent containing log message details.
+ * @param event Pointer to the log_event containing log message details.
  */
-typedef void (*log_fn)(struct LogEvent *);
+typedef void (*log_fn)(struct log_event *);
 
 /**
  * @brief Enables or disables quiet mode for logging.
@@ -127,4 +126,4 @@ void log_log(int level, const char *file, int line, const char *fmt, ...) __PRIN
 
 __CDECLS_END
 
-#endif// LOG_H
+#endif  // LOG_H

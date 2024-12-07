@@ -14,21 +14,20 @@
  * set to `NULL`.
  */
 #define INITIALIZE_MUTEX \
-    ((struct mutex){     \
+  ((struct mutex){       \
       0,                 \
       0,                 \
       NULL,              \
-    })
+  })
 
 /**
  * @struct mutex
  * @brief Represents a ticket-based spinlock for mutual exclusion.
  */
-struct mutex
-{
-    atomic_size_t next_ticket;   ///< Tracks the next ticket number.
-    atomic_size_t serving_ticket;///< Tracks the currently served ticket number.
-    void *data;                  ///< Optional user-defined data.
+struct mutex {
+  atomic_size_t next_ticket;     ///< Tracks the next ticket number.
+  atomic_size_t serving_ticket;  ///< Tracks the currently served ticket number.
+  void *data;                    ///< Optional user-defined data.
 };
 
 /**
@@ -57,4 +56,4 @@ bool mutex_try_lock(struct mutex *mutex);
  */
 bool mutex_is_locked(struct mutex *mutex);
 
-#endif// LOCK_H
+#endif  // LOCK_H

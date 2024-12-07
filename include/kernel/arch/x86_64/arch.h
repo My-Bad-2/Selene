@@ -31,7 +31,7 @@
 /// @details Automatically selects the correct implementation based on the value
 /// type.
 #define inp(port, val) \
-    _Generic((val), uint8_t *: inpb, uint16_t *: inpw, uint32_t *: inpl)(port, val)
+  _Generic((val), uint8_t *: inpb, uint16_t *: inpw, uint32_t *: inpl)(port, val)
 
 /**
  * @brief Halts the system, optionally disabling interrupts beforehand.
@@ -85,7 +85,7 @@ void inpl(uint16_t port, uint32_t *val);
 /**
  * @brief Initializes architecture-specific components.
  */
-void arch_initialize();
+void arch_initialize(void);
 
 /**
  * @brief Writes a buffer of characters to the output device.
@@ -95,4 +95,4 @@ void arch_initialize();
  */
 int arch_write(const char *buffer, size_t length);
 
-#endif// KERNEL_ARCH_H
+#endif  // KERNEL_ARCH_H

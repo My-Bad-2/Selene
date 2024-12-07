@@ -32,42 +32,42 @@
 # The same structure is used for both compile_settings_list and link_settings_list
 
 if get_variable('compile_settings_list', []).length() == 0
-    warning(
-        'Expected variable compile_settings_list not defined. Not processing compiler arguments.',
-    )
+  warning(
+    'Expected variable compile_settings_list not defined. Not processing compiler arguments.',
+  )
 else
-    # Process each compiler configuration
-    foreach entry : compile_settings_list
-        add_project_arguments(
-            entry.get('compiler').get_supported_arguments(entry.get('flags') + desired_common_compile_flags),
-            language: entry.get('lang'),
-            native: entry.get('isnative'),
-        )
-    endforeach
+  # Process each compiler configuration
+  foreach entry : compile_settings_list
+    add_project_arguments(
+      entry.get('compiler').get_supported_arguments(entry.get('flags') + desired_common_compile_flags),
+      language: entry.get('lang'),
+      native: entry.get('isnative'),
+    )
+  endforeach
 endif
 
 if get_variable('link_settings_list', []).length() == 0
-    warning(
-        'Expected variable link_settings_list not defined. Not processing linker arguments.',
-    )
+  warning(
+    'Expected variable link_settings_list not defined. Not processing linker arguments.',
+  )
 else
-    # Process each linker configuration
-    foreach entry : link_settings_list
-        supporting_link_flags = meson.get_external_property('get_supported_link_arg_flags', [], native: entry.get('isnative'))
+  # Process each linker configuration
+  foreach entry : link_settings_list
+    supporting_link_flags = meson.get_external_property('get_supported_link_arg_flags', [], native: entry.get('isnative'))
 
-        foreach flag : entry.get('flags') + desired_common_link_flags
-            if entry.get('compiler').has_multi_link_arguments(flag, supporting_link_flags)
-                add_project_link_arguments(
-                    flag,
-                    language: entry.get('lang'),
-                    native: entry.get('isnative'),
-                )
-            endif
-        endforeach
+    foreach flag : entry.get('flags') + desired_common_link_flags
+      if entry.get('compiler').has_multi_link_arguments(flag, supporting_link_flags)
+        add_project_link_arguments(
+          flag,
+          language: entry.get('lang'),
+          native: entry.get('isnative'),
+        )
+      endif
     endforeach
+  endforeach
 endif
 
 foreach flag : get_variable('linker_script_flags')
-    add_project_link_arguments(flag, language: 'c')
-    add_project_link_arguments(flag, language: 'cpp')
+  add_project_link_arguments(flag, language: 'c')
+  add_project_link_arguments(flag, language: 'cpp')
 endforeach
