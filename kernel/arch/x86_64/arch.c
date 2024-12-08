@@ -1,5 +1,6 @@
 #include <kernel/arch/x86_64/arch.h>
 #include <kernel/arch/x86_64/cpu/gdt.h>
+#include <kernel/arch/x86_64/cpu/idt.h>
 #include <kernel/arch/x86_64/drivers/uart.h>
 
 /**
@@ -50,14 +51,17 @@ void inpw(uint16_t port, uint16_t *val) { asm volatile("inw %1, %0" : "=a"(*val)
 void inpl(uint16_t port, uint32_t *val) { asm volatile("inl %1, %0" : "=a"(*val) : "Nd"(port)); }
 
 /**
- * @details Sets up the primary UART (COM1) for serial communication. This
- * function is typically called during system boot to prepare low-level
- * architecture dependencies.
+ * @details Sets up the primary UART (COM1) for serial communication, initializes the Global
+ * Descriptor Table, Interrupt Descriptor Table. This function is typically called during system
+ * boot to prepare low-level architecture dependencies.
  */
 void arch_initialize(void) {
   arch_disable_interrupts();
+
   uart_initialize(COM_PORT1);
   gdt_initialize();
+  idt_initialize();
+
   arch_enable_interrupts();
 }
 
@@ -78,5 +82,5 @@ int arch_write(const char *buffer, size_t length) {
     uart_putc(buffer[i], COM_PORT1);
   }
 
-  return length;
+  return (int)length;
 }

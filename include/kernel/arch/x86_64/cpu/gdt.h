@@ -1,6 +1,20 @@
 /**
- * @file gdt.h
- * @brief Global Descriptor Table (GDT) and Task State Segment (TSS) structures and initialization.
+ * @file
+ * @brief This file defines the structures, constants, and functions for managing the Global
+ * Descriptor Table (GDT) and Task State Segment (TSS) in the x86_64 architecture.
+ *
+ * The file includes:
+ * - Definitions for the maximum number of GDT entries and the size of the I/O permission bitmap.
+ * - Structures representing the Task State Segment (TSS), GDT entries, and the GDT register.
+ * - Function declarations to initialize and load the GDT and TSS, which are crucial for segment
+ * management and task switching in the operating system.
+ *
+ * The Task State Segment (TSS) stores information about the processor's state for context
+ * switching, interrupt handling, and privileged operations. The Global Descriptor Table (GDT) holds
+ * segment descriptors that define the memory segments and their access rights.
+ *
+ * @note This file is specific to x86_64 architecture and includes assembly-level code for loading
+ * the GDT and TSS.
  */
 #ifndef KERNEL_ARCH_X86_64_CPU_GDT_H
 #define KERNEL_ARCH_X86_64_CPU_GDT_H 1
@@ -65,8 +79,8 @@ struct tss_segment {
  * @brief Represents the Global Descriptor Table (GDT).
  */
 struct gdt {
-  struct gdt_segment gdt_table[MAX_GDT_ENTRIES];  ///< GDT segment descriptors.
-  struct tss_segment tss_segment;                 ///< TSS descriptor.
+  struct gdt_segment entries[MAX_GDT_ENTRIES];  ///< GDT segment descriptors.
+  struct tss_segment tss_segment;               ///< TSS descriptor.
 };
 
 /**

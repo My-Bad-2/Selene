@@ -1,6 +1,16 @@
 /**
- * @file uart.h
- * @brief UART driver for serial communication.
+ * @file
+ * @brief This file provides definitions and functions for interacting with UART (Universal Asynchronous
+ *        Receiver/Transmitter) devices.
+ * 
+ * The file includes:
+ * - Base I/O port addresses for up to four COM ports (COM1, COM2, COM3, and COM4).
+ * - Functions to initialize the UART device and send characters over the specified UART port.
+ * 
+ * The UART functionality allows for communication between the kernel and external devices via serial
+ * ports, such as sending debug output or interacting with peripheral devices.
+ * 
+ * @note The functions assume the UART device is already mapped to the specified I/O port.
  */
 #ifndef KERNEL_DRIVERS_UART_H
 #define KERNEL_DRIVERS_UART_H 1

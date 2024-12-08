@@ -1,6 +1,26 @@
 /**
  * @file log.h
- * @brief Lightweight logging library with support for callbacks, streams, and colored output.
+ *
+ * @brief Provides a logging system for different severity levels with callback and stream support.
+ *
+ * This file defines a logging system that allows messages of varying severity levels to be logged
+ * and output to different streams or processed by callback functions. The logging system supports
+ * different log levels, such as trace, debug, info, warning, error, fatal, and panic, which
+ * correspond to the severity of the message being logged.
+ *
+ * Key features:
+ * - Various log levels (`LOG_TRACE`, `LOG_DEBUG`, `LOG_INFO`, `LOG_WARN`, `LOG_ERROR`, `LOG_FATAL`,
+ * `LOG_PANIC`).
+ * - Macro functions for easy logging at different levels.
+ * - Support for setting quiet mode and log level thresholds.
+ * - Ability to add callback functions for log processing and output to multiple streams.
+ * - The log system uses `va_list` for formatting messages with variable arguments.
+ *
+ * The logging system is designed to be flexible, allowing for both console-based output and more
+ * complex logging mechanisms, such as logging to files or over the network (in-future).
+ *
+ * @note The log system supports varying verbosity based on the configured log level and allows for
+ * fine-grained control over the log output.
  */
 #ifndef LOG_H
 #define LOG_H 1

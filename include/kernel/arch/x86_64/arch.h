@@ -1,6 +1,20 @@
 /**
- * @file arch.h
- * @brief Basic Architecture-related Operations
+ * @file
+ * @brief This file defines architecture-specific functions and macros for interacting with the CPU
+ * and I/O ports.
+ *
+ * The file includes:
+ * - Macros for controlling CPU operations such as pausing, enabling/disabling interrupts, and
+ * halting the system.
+ * - Functions for reading and writing data to I/O ports of various sizes (8-bit, 16-bit, 32-bit).
+ * - A function to halt the system with the option to disable interrupts.
+ * - Architecture initialization and output functions.
+ *
+ * These functions are essential for low-level hardware interaction and control, enabling the kernel
+ * to manage CPU states, I/O operations, and system shutdown.
+ *
+ * @note The macros `arch_pause`, `arch_enable_interrupts`, `arch_disable_interrupts`, and
+ * `arch_hlt` correspond to specific assembly instructions used in x86_64 architecture.
  */
 #ifndef KERNEL_ARCH_H
 #define KERNEL_ARCH_H 1

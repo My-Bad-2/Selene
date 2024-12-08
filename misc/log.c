@@ -17,10 +17,10 @@ static struct {
   struct callback callbacks[MAX_CALLBACKS];
 } logger_conf;
 
-static const char *level_strings[] = {"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"};
+static const char *level_strings[] = {"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "PANIC"};
 
 static const char *level_colors[] = {
-    "\x1b[94m", "\x1b[36m", "\x1b[32m", "\x1b[33m", "\x1b[31m", "\x1b[35m",
+    "\x1b[94m", "\x1b[36m", "\x1b[32m", "\x1b[33m", "\x1b[31m", "\x1b[35m", "\x1b[35m",
 };
 
 static void stdout_callback(struct log_event *event) {

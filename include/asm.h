@@ -11,16 +11,18 @@
 
 // Subroutine of _.entity.  Redefine the `.end_*` macros as errors.
 .macro _.entity.reset purge=, text:vararg
-    .ifnb \purge
-        .purgem .end_function
-        .purgem .end_object
-    .endif
-    .macro .end_function
-        .error "unmatched .end_function directive \text"
-    .endm  // .end_function
-    .macro .end_object
-        .error "unmatched .end_object directive \text"
-    .endm  // .end_object
+  .ifnb \purge
+    .purgem .end_function
+    .purgem .end_object
+  .endif
+
+  .macro .end_function
+    .error "unmatched .end_function directive \text"
+  .endm  // .end_function
+
+  .macro .end_object
+    .error "unmatched .end_object directive \text"
+  .endm  // .end_object
 .endm  // _.entity.reset
 
 // Subroutine of entity-defining macros below.  This resets the `.end_*`
@@ -29,56 +31,54 @@
 // passed through from caller and validated here; the rest are provided by
 // each entity-defining macro.
 .macro _.entity name, scope, align, nosection, retain, entity, type, epilogue
-  	// First make sure that entity and `.end_*` pairs are matched (no nesting).
-  	_.entity.assert
-  	.purgem _.entity.assert
-  	.macro _.entity.assert
-  		.error "missing `.end_\entity` for `.\entity \name`"
-  	.endm
+  // First make sure that entity and `.end_*` pairs are matched (no nesting).
+  _.entity.assert
+  .purgem _.entity.assert
+  .macro _.entity.assert
+  	.error "missing `.end_\entity` for `.\entity \name`"
+  .endm
 
-  	// Clear old `.end_*` macros and make the one other than `.end_\entity`
-  	// an error until this entity is finished.
-  	_.entity.reset purge, inside definition of `.\entity \name`
+  // Clear old `.end_*` macros and make the one other than `.end_\entity`
+  // an error until this entity is finished.
+  _.entity.reset purge, inside definition of `.\entity \name`
 
-  	// Now redefine the `.end_\entity` macro to pair with this entity.
-  	// This definition captures the parameters to pass on to `_.entity.end`.
-  	.purgem .end_\entity
-  	.macro .end_\entity
-  	  	_.entity.end \entity, \name, \nosection, \epilogue
-  	.endm
+  // Now redefine the `.end_\entity` macro to pair with this entity.
+  // This definition captures the parameters to pass on to `_.entity.end`.
+  .purgem .end_\entity
+  .macro .end_\entity
+  	_.entity.end \entity, \name, \nosection, \epilogue
+  .endm
 
   	// Unless given the `nosection` flag argument, enter a per-entity section.
-  	.ifb \nosection
-  	  	.ifnb \retain
-  	  		.ifnc \retain,R
-  	  		  	.error "retain argument to \entity directive must be `R` or empty"
-  	  		.endif
-  	  	.endif
-  	  	
-		// The specific section name and details depend on the entity type.
-  	  	_.entity.pushsection.\type \name, \retain
-  	.else
-  	  	.ifnc \nosection, nosection
-  	  		.error "final argument to \entity directive must be exactly `nosection`"
-  	  	.endif
-  	.endif
+  .ifb \nosection
+    .ifnb \retain
+    	.ifnc \retain,R
+    		.error "retain argument to \entity directive must be `R` or empty"
+    	.endif
+    .endif	  	
+	  // The specific section name and details depend on the entity type.
+    _.entity.pushsection.\type \name, \retain
+  .else
+    .ifnc \nosection, nosection
+      .error "final argument to \entity directive must be exactly `nosection`"
+    .endif
+  .endif
 
-  	// Align within the section.
-  	.ifnb \align
-  		.balign \align
-  	.endif
+  // Align within the section.
+  .ifnb \align
+    .balign \align
+  .endif
 
-  	// Finally, define the actual label.  The entity's own prologue comes next.
-  	.label \name, \scope, \entity
+  // Finally, define the actual label.  The entity's own prologue comes next.
+  .label \name, \scope, \entity
 .endm  // _.entity
 
 // Subroutines of _.entity selected by the \type argument.
-
 .macro _.entity.pushsection.function name, retain
-  	// The function goes into the .text section in its own section group.
-  	// This lets any metadata associated with the function travel in its
-  	// group by using `.pushsection .metadata-section, "...?", ...`.
-  	.pushsection .text, "axG\retain", %progbits, \name
+	// The function goes into the .text section in its own section group.
+	// This lets any metadata associated with the function travel in its
+	// group by using `.pushsection .metadata-section, "...?", ...`.
+	.pushsection .text, "axG\retain", %progbits, \name
 .endm
 
 .macro _.entity.pushsection.bss name, retain
@@ -94,24 +94,24 @@
 .endm
 
 .macro _.entity.pushsection.rodata name, retain
-    .pushsection .rodata.\name, "a\retain", %progbits
+  .pushsection .rodata.\name, "a\retain", %progbits
 .endm
 
 // Subroutine of `.end_\entity` macros defined by `_.entity`, above.
 .macro _.entity.end entity, name, nosection, epilogue
-    // First, reset the assertion machinery.
-    .purgem _.entity.assert
-    .macro _.entity.assert
-    .endm
+  // First, reset the assertion machinery.
+  .purgem _.entity.assert
+  .macro _.entity.assert
+  .endm
 
-    // Now redefine `.end_*` so it's an error with no matching entity.
-    _.entity.reset purge
+  // Now redefine `.end_*` so it's an error with no matching entity.
+  _.entity.reset purge
 
-    // Do the epilogue for the entity, e.g. .cfi_endproc.
-    \epilogue
+  // Do the epilogue for the entity, e.g. .cfi_endproc.
+  \epilogue
 
-  	// Set the ELF symbol's `st_size`.
-  	.size \name, . - \name
+  // Set the ELF symbol's `st_size`.
+  .size \name, . - \name
 
 	// Leave the per-entity section, if any.
 	.ifb \nosection
@@ -122,11 +122,11 @@
 // Subroutines of .function, start/end pairs for each `cfi` mode.
 
 .macro _.function.start.abi
-  	.cfi_startproc
+	.cfi_startproc
 .endm
 
 .macro _.function.end.abi
-  	.cfi_endproc
+  .cfi_endproc
 .endm
 
 .macro _.function.start.custom
@@ -149,11 +149,11 @@ _.entity.reset
 // Define a function that extends util `.end_function`
 .macro .function name, scope=local, cfi=abi, align=, nosection=, retain=
 .ifnc \cfi, abi
-    .ifnc \cfi, custom
-        .ifnc \cfi, none
-            .error "`cfi` argument `\cfi` no `abi`, `custom`, or `none`"
-        .endif
+  .ifnc \cfi, custom
+    .ifnc \cfi, none
+      .error "`cfi` argument `\cfi` no `abi`, `custom`, or `none`"
     .endif
+  .endif
 .endif
 
 _.entity \name, \scope, \align, \nosection, \retain, function, function, _.function.end.\cfi
@@ -166,41 +166,40 @@ _.function.start.\cfi
 
 // Set ELF symbol visibility and binding, which represent scope.
 .ifnb \scope
-    .ifnc \scope, local
-        .ifc \scope, weak
-            .weak \name
-        .else
-            .globl \name
-    
-            .ifc \scope, global
-                .hidden \name
-            .else
-                .ifnc \scope, export
-                    .error "`scope` argument `\scope` not `local`, `global`, `export`, or `weak`"
-                .endif
-            .endif
+  .ifnc \scope, local
+    .ifc \scope, weak
+      .weak \name
+    .else
+      .globl \name
+      .ifc \scope, global
+        .hidden \name
+      .else
+        .ifnc \scope, export
+          .error "`scope` argument `\scope` not `local`, `global`, `export`, or `weak`"
         .endif
+      .endif
     .endif
+  .endif
 .endif
 
 // Define the label itself.
 .ifb \value
-    \name\():
+  \name\():
 .else
-    \name = \value
+  \name = \value
 .endif
 .endm // .label
 
 // Define a data pbject that extends until `.end_object`
 .macro .object name, type=data, scope=local, align=, nosection=, retain=
 .ifnc \type, bss
-    .ifnc \type, data
-        .ifnc \type, relro
-            .ifnc \type, rodata
-                .error "`type` argument `\type` not `bss`, `data, `relro`, or `rodata`"
-            .endif
-        .endif
+  .ifnc \type, data
+    .ifnc \type, relro
+      .ifnc \type, rodata
+        .error "`type` argument `\type` not `bss`, `data, `relro`, or `rodata`"
+      .endif
     .endif
+  .endif
 .endif
 _.entity \name, \scope, \align, \nosection, \retain, object, \type
 .endm  // .object
@@ -284,6 +283,25 @@ add $\value, %rsp
 #define JMP_AND_SPECULATION_POSTFENCE(x) \
   jmp x;                                 \
   int3
+
+// Writes %rax to the given MSR, which should be the bare constant.
+// Clobbers %rcx and %rdx.
+.macro wrmsr64 msr
+  movl $\msr, %ecx
+  movq %rax, %rdx
+  shr $32, %rdx
+  wrmsr
+.endm
+
+// Reads the given MSR, which should be the bare constant, into %rax.
+// Clobbers %rcx and %rdx.
+.macro rdmsr64 msr
+  mov $\msr, %ecx
+  rdmsr
+  shl $32, %rdx
+  or %rdx, %rax
+.endm
+
 #endif  //__x86_64__
 
 #endif  // __ASSEMBLER__

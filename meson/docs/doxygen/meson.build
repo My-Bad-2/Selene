@@ -36,7 +36,7 @@ doxygen_input = get_variable(
   [
     meson.project_source_root() / 'include',
     meson.project_source_root() / 'kernel',
-    meson.project_source_root() / 'klibc',
+    # meson.project_source_root() / 'klibc',
     meson.project_source_root() / 'misc',
     meson.project_source_root() / 'README.md',
   ],

@@ -1,6 +1,6 @@
+#include <klibc/string.h>
 #include <lock.h>
 #include <log.h>
-#include <string.h>
 
 #include <kernel/arch/x86_64/cpu/gdt.h>
 
@@ -56,24 +56,24 @@ static void set_tss_segment(struct tss_segment *segment, struct tss *tss) {
   segment->reserved = 0;
 }
 
-void gdt_initialize() {
+void gdt_initialize(void) {
   mutex_lock(&gdt_mutex);
 
   memset(&gdt, 0, sizeof(struct gdt));
   memset(&global_tss, 0, sizeof(struct tss));
 
-  set_gdt_segment(&gdt.gdt_table[0], 0, 0, 0, 0);
+  set_gdt_segment(&gdt.entries[0], 0, 0, 0, 0);
 
-  set_gdt_segment(&gdt.gdt_table[GDT_KERNEL_CODE], 0, DEFAULT_LIMIT,
+  set_gdt_segment(&gdt.entries[GDT_KERNEL_CODE], 0, DEFAULT_LIMIT,
                   GDT_LONG_MODE_GRANULARITY | GDT_GRANULARITY, GDT_CODE_SEGMENT);
 
-  set_gdt_segment(&gdt.gdt_table[GDT_KERNEL_DATA], 0, DEFAULT_LIMIT, GDT_DB | GDT_GRANULARITY,
+  set_gdt_segment(&gdt.entries[GDT_KERNEL_DATA], 0, DEFAULT_LIMIT, GDT_DB | GDT_GRANULARITY,
                   GDT_DATA_SEGMENT);
 
-  set_gdt_segment(&gdt.gdt_table[GDT_USER_DATA], 0, DEFAULT_LIMIT, GDT_DB | GDT_GRANULARITY,
+  set_gdt_segment(&gdt.entries[GDT_USER_DATA], 0, DEFAULT_LIMIT, GDT_DB | GDT_GRANULARITY,
                   GDT_DATA_SEGMENT | GDT_USER);
 
-  set_gdt_segment(&gdt.gdt_table[GDT_USER_CODE], 0, DEFAULT_LIMIT,
+  set_gdt_segment(&gdt.entries[GDT_USER_CODE], 0, DEFAULT_LIMIT,
                   GDT_LONG_MODE_GRANULARITY | GDT_GRANULARITY, GDT_CODE_SEGMENT | GDT_USER);
 
   set_tss_segment(&gdt.tss_segment, &global_tss);
@@ -86,7 +86,7 @@ void gdt_initialize() {
   load_gdt(&gdtr);
   load_tss();
 
-  log_trace("Initialized Global Description Table!");
+  log_info("Initialized Global Description Table!");
   log_debug("Global Description Table located @ %p", &gdt);
 
   mutex_unlock(&gdt_mutex);

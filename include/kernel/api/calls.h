@@ -1,6 +1,15 @@
 /**
- * @file calls.h
- * @brief Kernel API calls for klibc.
+ * @file
+ * @brief This file provides the declarations for kernel-level API calls related to I/O operations.
+ *
+ * The file defines:
+ * - The `iovec` structure, which is used for vectorized I/O operations, representing a buffer and
+ * its length.
+ * - The `kernel_writev` function, which allows writing data from multiple buffers to an output
+ * device.
+ *
+ * These API calls facilitate the efficient handling of I/O by supporting multiple buffer writes in
+ * a single operation.
  */
 #ifndef KERNEL_API_CALLS_H
 #define KERNEL_API_CALLS_H 1
