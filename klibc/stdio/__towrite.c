@@ -8,7 +8,7 @@ int __towrite(FILE *stream) {
     return EOF;
   }
 
-  stream->read_pos = stream->read_end = NULL;
+  stream->read_pos = stream->read_end = nullptr;
 
   // Activate write through the buffer
   stream->write_pos = stream->write_base = stream->buf;

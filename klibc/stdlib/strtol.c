@@ -71,13 +71,13 @@ long int strtol(const char *restrict nptr, char **restrict endptr, int base) {
     acc = -acc;
   }
 
-  if (endptr != NULL) {
+  if (endptr != nullptr) {
     *endptr = (char *)(any ? str - 1 : nptr);
   }
 
   return (long)acc;
 }
 
-int atoi(const char *nptr) { return (int)strtol(nptr, (char **)NULL, BASE_DECIMAL); }
+int atoi(const char *nptr) { return (int)strtol(nptr, (char **)nullptr, BASE_DECIMAL); }
 
-long atol(const char *nptr) { return strtol(nptr, (char **)NULL, BASE_DECIMAL); }
+long atol(const char *nptr) { return strtol(nptr, (char **)nullptr, BASE_DECIMAL); }

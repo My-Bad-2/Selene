@@ -1,4 +1,7 @@
-klibc_sources = files('ctype.c')
+klibc_sources = files(
+  'assert.c',
+  'ctype.c',
+)
 
 subdir('string')
 subdir('internal')

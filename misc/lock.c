@@ -18,7 +18,7 @@ void mutex_lock(struct mutex *mutex) {
  * @details Increments the `serving_ticket` to allow the next waiting thread to acquire the lock.
  */
 void mutex_unlock(struct mutex *mutex) {
-  if (mutex_is_locked(mutex)) {
+  if (!mutex_is_locked(mutex)) {
     return;
   }
 

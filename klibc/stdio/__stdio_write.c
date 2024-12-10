@@ -25,7 +25,7 @@ size_t __stdio_write(FILE *stream, const unsigned char *buf, size_t len) {
     }
 
     if (cnt < 0) {
-      stream->write_pos = stream->write_base = stream->write_end = NULL;
+      stream->write_pos = stream->write_base = stream->write_end = nullptr;
       stream->flags |= FILE_ERROR;
 
       return (iov_cnt == 2) ? 0 : len - iov[0].len;

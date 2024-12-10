@@ -1,7 +1,11 @@
-kernel_sources = files('main.c')
+kernel_sources = files(
+  'kernel.c',
+  'main.c',
+)
 
 subdir('arch' / host_machine.cpu_family())
 subdir('api')
+subdir('memory')
 
 kernel = executable(
   'kernel',

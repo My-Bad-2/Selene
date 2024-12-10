@@ -60,11 +60,11 @@ long long strtoll(const char *__restrict nptr, char **__restrict endptr, int bas
     acc = -acc;
   }
 
-  if (endptr != NULL) {
+  if (endptr != nullptr) {
     *endptr = (char *)(any ? s - 1 : nptr);
   }
 
   return acc;
 }
 
-long atoll(const char *__nptr) { return strtoll(__nptr, (char **)NULL, 10); }
+long atoll(const char *__nptr) { return strtoll(__nptr, (char **)nullptr, 10); }

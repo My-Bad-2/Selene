@@ -105,7 +105,7 @@ void arch_initialize(void);
  * @brief Writes a buffer of characters to the output device.
  * @param buffer Pointer to the character buffer to write.
  * @param length Number of characters to write.
- * @return The number of characters written, or 0 if the buffer is `NULL` or the length is 0.
+ * @return The number of characters written, or 0 if the buffer is `nullptr` or the length is 0.
  */
 int arch_write(const char *buffer, size_t length);
 

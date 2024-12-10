@@ -74,7 +74,7 @@ int arch_write(const char *buffer, size_t length) {
     return 0;
   }
 
-  if (buffer == NULL) {
+  if (buffer == nullptr) {
     return 0;
   }
 

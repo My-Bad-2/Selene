@@ -29,13 +29,13 @@
 /**
  * @brief Macro to initialize a mutex.
  * @details Creates a mutex with `next_ticket` and `serving_ticket` set to 0, and the data pointer
- * set to `NULL`.
+ * set to `nullptr`.
  */
 #define INITIALIZE_MUTEX \
   ((struct mutex){       \
       0,                 \
       0,                 \
-      NULL,              \
+      nullptr,              \
   })
 
 /**

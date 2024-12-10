@@ -59,7 +59,7 @@ unsigned long strtoul(const char *__restrict nptr, char **__restrict endptr, int
     acc = -acc;
   }
 
-  if (endptr != NULL) {
+  if (endptr != nullptr) {
     *endptr = (char *)(any ? s - 1 : nptr);
   }
 
