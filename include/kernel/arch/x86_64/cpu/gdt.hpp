@@ -16,12 +16,16 @@
  * @note This file is specific to x86_64 architecture and includes assembly-level code for loading
  * the GDT and TSS.
  */
-#ifndef KERNEL_ARCH_X86_64_CPU_GDT_H
-#define KERNEL_ARCH_X86_64_CPU_GDT_H 1
+#ifndef KERNEL_ARCH_CPU_GDT_HPP
+#define KERNEL_ARCH_CPU_GDT_HPP 1
 
 #include <compiler.h>
-#include <stddef.h>
-#include <stdint.h>
+
+#include <array>
+#include <cstdint>
+#include <expected>
+
+#include <lock.hpp>
 
 /** @brief Maximum size of the I/O permission bitmap. */
 #define MAX_IO_PERMISSION_BITMAP 8192
@@ -30,12 +34,12 @@
 #define MAX_GDT_ENTRIES 5
 
 /**
- * @struct tss
+ * @struct
  * @brief Task State Segment (TSS) structure for x86_64.
  * @details The TSS stores information about the stack pointers, interrupt stack table (IST), and
  * the I/O permission bitmap offset.
  */
-struct tss {
+struct Tss {
   uint32_t reserved_0;   ///< Reserved.
   uint64_t rsp[3];       ///< Stack pointers for privilege levels 0, 1, and 2.
   uint64_t reserved_1;   ///< Reserved.
@@ -46,10 +50,10 @@ struct tss {
 } __PACKED;
 
 /**
- * @struct gdt_segment
+ * @struct
  * @brief Represents a single segment descriptor in the GDT.
  */
-struct gdt_segment {
+struct GdtSegment {
   uint16_t limit;           ///< Segment limit (low part).
   uint16_t base_low;        ///< Segment base address (low part).
   uint8_t base_mid;         ///< Segment base address (middle part).
@@ -57,13 +61,15 @@ struct gdt_segment {
   uint8_t limit_high : 4;   ///< Segment limit (high part).
   uint8_t granularity : 4;  ///< Granularity and other flags.
   uint8_t base_high;        ///< Segment base address (high part).
+
+  void set(uint32_t base, uint32_t limit, uint8_t granularity, uint8_t access);
 } __PACKED;
 
 /**
- * @struct tss_segment
+ * @struct
  * @brief Represents the descriptor for the TSS in the GDT.
  */
-struct tss_segment {
+struct TssSegment {
   uint16_t limit;       ///< TSS segment limit.
   uint16_t base_low;    ///< TSS base address (low part).
   uint8_t base_mid;     ///< TSS base address (middle part).
@@ -72,41 +78,51 @@ struct tss_segment {
   uint8_t base_high;    ///< TSS base address (high part).
   uint32_t base_upper;  ///< TSS base address (upper part).
   uint32_t reserved;    ///< Reserved.
+
+  void set(Tss* tss);
 } __PACKED;
 
 /**
- * @struct gdt
- * @brief Represents the Global Descriptor Table (GDT).
- */
-struct gdt {
-  struct gdt_segment entries[MAX_GDT_ENTRIES];  ///< GDT segment descriptors.
-  struct tss_segment tss_segment;               ///< TSS descriptor.
-};
-
-/**
- * @struct gdt_register
+ * @struct
  * @brief Structure representing the GDT register (GDTR)..
  */
-struct gdt_register {
+struct GdtRegister {
   uint16_t limit;  ///< Size of the GDT.
   uintptr_t base;  ///< Base address of the GDT.
 } __PACKED;
 
 /**
- * @brief Initializes the Global Descriptor Table (GDT) and Task State Segment (TSS).
- * @details Sets up segment descriptors, loads the GDTR, and initializes the TSS.
+ * @struct
+ * @brief Represents the Global Descriptor Table (GDT).
  */
-void gdt_initialize(void);
+struct GdtTable {
+  std::array<GdtSegment, MAX_GDT_ENTRIES> segments;
+  TssSegment tss_segment;
+};
+
+class Gdt {
+ public:
+  Gdt() = default;
+  void initialize();
+  void load();
+
+ private:
+  GdtTable m_table = {};
+  Tss m_tss = {};
+  TicketLock m_lock;
+};
+
+__CDECLS_BEGIN
 
 /**
  * @brief Load the Global Descriptor Table (GDT).
  * @details This function uses the `lgdtq` instruction to load the GDT register (GDTR) with a new
- * GDT. It also reloads all segment registers with appropriate selectors and transitions to the new
- * code segment using a far return (`lretq`).
+ * GDT. It also reloads all segment registers with appropriate selectors and transitions to the
+ * new code segment using a far return (`lretq`).
  * @param gdtr Pointer to the `gdt_register` structure containing the base and limit of the GDT.
  * @note This function is implemented in assembly.
  */
-void load_gdt(struct gdt_register *gdtr);
+void load_gdt(GdtRegister* gdtr);
 
 /**
  * @brief Load the Task State Segment (TSS).
@@ -114,6 +130,8 @@ void load_gdt(struct gdt_register *gdtr);
  * Segment (TSS) selector into the task register. This initializes the CPU's task state.
  * @note This function is implemented in assembly.
  */
-void load_tss(void);
+void load_tss();
 
-#endif  // KERNEL_ARCH_X86_64_CPU_GDT_H
+__CDECLS_END
+
+#endif  // KERNEL_ARCH_CPU_GDT_HPP

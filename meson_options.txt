@@ -36,6 +36,9 @@ option(
   yield: true,
 )
 
+# Alternatively pass your own libgcc location.
+option('libgcc-location', type: 'string', value: 'meson/cross/x86_64/libgcc')
+
 # option('use-libc-subproject', type: 'boolean', value: true, yield: true,
 #     description: 'When true, use the subproject defined in the libc-subproject option. An alternate approach is to override c_stdlib in your cross files.')
 # option('libc-subproject', type: 'array',

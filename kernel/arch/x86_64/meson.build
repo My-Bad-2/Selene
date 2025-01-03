@@ -1,4 +1,4 @@
-kernel_sources += files('arch.c')
+kernel_sources += files('arch.cpp')
 
 subdir('drivers')
 subdir('cpu')

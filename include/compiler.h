@@ -45,6 +45,9 @@
 #define __UNINITIALIZED
 #endif
 
+#define UBIT_INT(n) unsigned _BitInt((n))
+#define BIT_INT(n) _BitInt((n))
+
 #if defined(__cplusplus)
 #if __cplusplus >= 201703L && (defined(__clang__) || (defined(__GNUC__) && (__GNUC__ >= 10)))
 #define __WARN_UNUSED_CONSTRUCTOR [[nodiscard]]

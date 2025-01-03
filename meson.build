@@ -133,6 +133,11 @@ if host_machine.cpu_family() == 'x86_64'
 endif
 
 linker_paths = ['meson/linker-scripts/']
+libgcc_path = meson.current_source_dir() / get_option('libgcc-location')
+
+if desired_common_compile_flags.contains('-mno-red-zone')
+  libgcc_path += '/no-red-zone'
+endif
 
 # Process the compilation flags
 subdir('meson/linker/linker-script-as-property')
@@ -159,6 +164,7 @@ awesome_css = subproject('doxygen-awesome-css')
 ###############
 
 limine_dep = dependency('limine')
+libstdcxx_dep = dependency('freestnd_cxx_hdrs')
 
 #######################
 # Process Source Tree #

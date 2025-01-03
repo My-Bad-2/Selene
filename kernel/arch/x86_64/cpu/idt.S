@@ -156,8 +156,3 @@
 
   JMP_AND_SPECULATION_POSTFENCE(.Lcommon_return)
 .end_function
-
-.function load_idt, global
-  lidt (%rdi)
-  RET_AND_SPECULATION_POSTFENCE
-.end_function

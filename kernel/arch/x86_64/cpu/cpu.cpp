@@ -1,4 +1,4 @@
-#include <kernel/arch/x86_64/cpu/cpu.h>
+#include <kernel/arch/x86_64/cpu/cpu.hpp>
 
 void invalidate_page(uintptr_t address) { asm volatile("invlpg (%0)" ::"r"(address)); }
 
@@ -34,31 +34,31 @@ void write_cr4(uint64_t value) { asm volatile("mov %0, %%cr4" ::"r"(value) : "me
 uint64_t read_msr(uint32_t msr) {
   uint32_t edx, eax;
   asm volatile("rdmsr" : "=a"(eax), "=d"(edx) : "c"(msr) : "memory");
-  return ((uint64_t)edx << 32) | eax;
+  return (static_cast<uint64_t>(edx) << 32) | eax;
 }
 
 void write_msr(uint32_t msr, uint64_t value) {
   uint32_t edx = value >> 32;
-  uint32_t eax = (uint32_t)value;
+  uint32_t eax = static_cast<uint32_t>(value);
   asm volatile("wrmsr" ::"a"(eax), "d"(edx), "c"(msr) : "memory");
 }
 
 void enable_pat() { write_msr(MSR_PAT, DEFAULT_PAT); }
 
-void fxsave(uint8_t* region) { asm volatile("fxsaveq (%0)" ::"r"(region) : "memory"); }
+void fxsave(uint8_t const* region) { asm volatile("fxsaveq (%0)" ::"r"(region) : "memory"); }
 
-void xsave(uint8_t* region) {
+void xsave(uint8_t const* region) {
   asm volatile("xsaveq (%0)" ::"r"(region), "a"(RFBM_LOW), "d"(RFBM_HIGH) : "memory");
 }
 
-void xsaveopt(uint8_t* region) {
+void xsaveopt(uint8_t const* region) {
   asm volatile("xsaveopt64 (%0)" ::"r"(region), "a"(RFBM_LOW), "d"(RFBM_HIGH) : "memory");
 }
-void xrstor(uint8_t* region) {
+void xrstor(uint8_t const* region) {
   asm volatile("xrstorq (%0)" ::"r"(region), "a"(RFBM_LOW), "d"(RFBM_HIGH) : "memory");
 }
 
-void fxrstor(uint8_t* region) {
+void fxrstor(uint8_t const* region) {
   asm volatile("fxrstorq (%0)" ::"r"(region), "a"(RFBM_LOW), "d"(RFBM_HIGH) : "memory");
 }
 

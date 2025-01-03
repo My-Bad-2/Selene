@@ -23,10 +23,10 @@
  * @note This file is intended to be part of the kernel's interrupt handling subsystem and may
  * require assembly-level code to fully function (e.g., for loading the IDT).
  */
-#ifndef KERNEL_ARCH_X86_64_CPU_EXCEPTIONS_H
-#define KERNEL_ARCH_X86_64_CPU_EXCEPTIONS_H 1
+#ifndef KERNEL_ARCH_CPU_EXCEPTIONS_HPP
+#define KERNEL_ARCH_CPU_EXCEPTIONS_HPP 1
 
-#include <stdint.h>
+#include <cstdint>
 
 /**
  * @brief Enumeration of Exception Types.
@@ -35,7 +35,7 @@
  * can generate during execution. These exceptions are mapped to specific vector
  * numbers, and they include both hardware and software exceptions.
  */
-enum ExceptionType {
+enum ExceptionType : uint8_t {
   EXCEPTION_DIVIDE_BY_0 = 0,                ///< Divide-by-zero exception (vector 0)
   EXCEPTION_DEBUG = 1,                      ///< Debug exception (vector 1)
   EXCEPTION_NON_MASKABLE_INTERRUPT = 2,     ///< Non-maskable interrupt (vector 2)
@@ -68,7 +68,7 @@ enum ExceptionType {
  * can handle. It includes both platform interrupts (e.g., IRQs) and local
  * APIC (Advanced Programmable Interrupt Controller) interrupts.
  */
-enum InterruptType {
+enum InterruptType : uint16_t {
   PLATFORM_INTERRUPT_BASE = 32,  ///< Base value for platform interrupts
   PLATFORM_MAX = 256,            ///< Maximum value for platform interrupts
 
@@ -107,7 +107,7 @@ enum InterruptType {
  * exception occurs. It is used for context switching, exception handling, and
  * for saving and restoring the state of the CPU during interrupt handling.
  */
-struct iframe {
+struct Iframe {
   uint64_t rdi;       ///< Register rdi
   uint64_t rsi;       ///< Register rsi
   uint64_t rbp;       ///< Register rbp
@@ -139,9 +139,9 @@ struct iframe {
  * to the registers, it also includes a field for the expected GS register value.
  * NMIs are high-priority interrupts that cannot be masked by software.
  */
-struct nmi_frame {
-  struct iframe regs;  ///< General register state during the NMI
-  void* expected_gs;   ///< Expected value of the GS register during the NMI
+struct NmiFrame {
+  Iframe regs;        ///< General register state during the NMI
+  void* expected_gs;  ///< Expected value of the GS register during the NMI
 };
 
 #endif  // KERNEL_ARCH_X86_64_CPU_EXCEPTIONS_H

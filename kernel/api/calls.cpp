@@ -1,5 +1,5 @@
 #include <kernel/api/calls.h>
-#include <kernel/arch/arch.h>
+#include <kernel/arch/arch.hpp>
 
 /**
  * @details Iterates through each buffer in the `iovec` array and writes its content to the primary
@@ -10,7 +10,7 @@ int kernel_writev(struct iovec *iov, int iovcnt) {
   int total_written = 0;
 
   for (int i = 0; i < iovcnt; i++) {
-    int bytes_written = arch_write(iov[i].buffer, iov[i].len);
+    int bytes_written = arch_write(static_cast<char*>(iov[i].buffer), iov[i].len);
 
     if (bytes_written == -1) {
       return -1;
@@ -18,7 +18,7 @@ int kernel_writev(struct iovec *iov, int iovcnt) {
 
     total_written += bytes_written;
 
-    if ((size_t)bytes_written != iov[i].len) {
+    if (static_cast<size_t>(bytes_written) != iov[i].len) {
       break;
     }
   }

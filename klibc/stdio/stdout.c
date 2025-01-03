@@ -18,7 +18,6 @@ __LOCAL FILE __stdout_FILE = {
     .flags = FILE_PERM | FILE_NO_READ,
     .lbf = '\n',
     .write = __stdout_write,
-    .lock = INITIALIZE_MUTEX,
 };
 
 FILE *const stdout = &__stdout_FILE;

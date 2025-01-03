@@ -7,6 +7,7 @@ subdir('string')
 subdir('internal')
 subdir('stdio')
 subdir('stdlib')
+subdir('crt')
 
 clangtidy_files += klibc_sources
 

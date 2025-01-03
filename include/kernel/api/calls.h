@@ -14,6 +14,7 @@
 #ifndef KERNEL_API_CALLS_H
 #define KERNEL_API_CALLS_H 1
 
+#include <compiler.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -26,12 +27,16 @@ struct iovec {
   size_t len;    ///< Length of the buffer in bytes.
 };
 
+__CDECLS_BEGIN
+
 /**
- * @brief Writes data from multiple buffers to the output device.
- * @param buffer Array of `iovec` structures containing the buffers to write.
- * @param count Number of buffers in the array.
+ * @brief Writes data from multiple iov to the output device.
+ * @param iov Array of `iovec` structures containing the iovs to write.
+ * @param iovcnt Number of iovs in the array.
  * @return The total number of bytes written, or -1 on error.
  */
-int kernel_writev(struct iovec *buffer, int count);
+int kernel_writev(struct iovec *iov, int iovcnt);
+
+__CDECLS_END
 
 #endif  // KERNEL_API_CALLS_H

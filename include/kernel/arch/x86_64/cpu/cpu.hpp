@@ -20,10 +20,10 @@
  * @note This file is specific to x86_64 architecture and may include hardware-specific
  * implementations.
  */
-#ifndef KERNEL_ARCH_X86_64_CPU_CPU_H
-#define KERNEL_ARCH_X86_64_CPU_CPU_H 1
+#ifndef KERNEL_ARCH_CPU_CPU_HPP
+#define KERNEL_ARCH_CPU_CPU_HPP 1
 
-#include <stdint.h>
+#include <cstdint>
 
 #include <kernel/arch/x86_64/regs.h>
 
@@ -54,9 +54,9 @@
  * @brief Macros for Reverse Fault Bitmap (RFBM) manipulation.
  * @{
  */
-#define RFBM ((uint64_t)(-1))               ///< Reverse Fault Bitmap set to all ones.
-#define RFBM_LOW ((uint32_t)(RFBM))         ///< Lower 32 bits of the RFBM.
-#define RFBM_HIGH ((uint32_t)(RFBM >> 32))  ///< Upper 32 bits of the RFBM.
+#define RFBM (static_cast<uint64_t>(-1))               ///< Reverse Fault Bitmap set to all ones.
+#define RFBM_LOW (static_cast<uint32_t>(RFBM))         ///< Lower 32 bits of the RFBM.
+#define RFBM_HIGH (static_cast<uint32_t>(RFBM >> 32))  ///< Upper 32 bits of the RFBM.
 /** @} */
 
 /**
@@ -129,31 +129,31 @@ void enable_pat();
  * @brief Saves the processor state to a specified memory region using FXSAVE.
  * @param region A pointer to the memory region.
  */
-void fxsave(uint8_t* region);
+void fxsave(uint8_t const* region);
 
 /**
  * @brief Saves the processor state to a specified memory region using XSAVE.
  * @param region A pointer to the memory region.
  */
-void xsave(uint8_t* region);
+void xsave(uint8_t const* region);
 
 /**
  * @brief Saves the processor state to a specified memory region using XSAVEOPT.
  * @param region A pointer to the memory region.
  */
-void xsaveopt(uint8_t* region);
+void xsaveopt(uint8_t const* region);
 
 /**
  * @brief Restores the processor state from a specified memory region using XRSTOR.
  * @param region A pointer to the memory region.
  */
-void xrstor(uint8_t* region);
+void xrstor(uint8_t const* region);
 
 /**
  * @brief Restores the processor state from a specified memory region using FXRSTOR.
  * @param region A pointer to the memory region.
  */
-void fxrstor(uint8_t* region);
+void fxrstor(uint8_t const* region);
 /** @} */
 
 /**

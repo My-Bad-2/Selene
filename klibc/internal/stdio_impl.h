@@ -3,11 +3,10 @@
 
 #include <compiler.h>
 #include <klibc/stdio.h>
-#include <lock.h>
 #include <stddef.h>
 
-#define LOCK_STREAM(stream) (mutex_try_lock(&stream->lock))
-#define UNLOCK_STREAM(stream) (mutex_unlock(&stream->lock))
+#define LOCK_STREAM(stream) ((void)0)
+#define UNLOCK_STREAM(stream) ((void)0)
 
 #define NL_ARGMAX 9
 
@@ -33,7 +32,6 @@ struct _IO_FILE {
   int offset;
   unsigned int mode;
   int lbf;
-  struct mutex lock;
 };
 
 __LOCAL int __towrite(FILE *stream);

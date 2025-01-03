@@ -6,11 +6,10 @@
  * enabling the identification of supported CPU features, cache details, thermal capabilities,
  * and other processor-specific information.
  */
-#ifndef CPU_FEATURES_H
-#define CPU_FEATURES_H 1
+#ifndef CPU_FEATURES_HPP
+#define CPU_FEATURES_HPP 1
 
-#include <stdbool.h>
-#include <stdint.h>
+#include <cstdint>
 
 /** @defgroup CPUID_Leafs CPUID Leafs
  * @{
@@ -40,14 +39,14 @@
  * The CPUID leaf contains the values of the four registers (EAX, EBX, ECX, and EDX) returned by the
  * CPUID instruction.
  */
-struct cpuid_leaf {
+struct CpuidLeaf {
   uint32_t values[4];  ///< Array holding EAX, EBX, ECX, and EDX values.
 };
 
 /**
  * @brief Defines a structure for identifying a specific feature bit in a CPUID leaf.
  */
-struct cpuid_bit {
+struct CpuidBit {
   uint32_t leaf;  ///< The CPUID leaf number.
   uint8_t word;   ///< The index of the 32-bit word (0 = EAX, 1 = EBX, etc.).
   uint8_t bit;    ///< The bit index within the word.
@@ -66,7 +65,7 @@ struct cpuid_bit {
  * @param word The register index (EAX, EBX, ECX, or EDX) where the bit resides.
  * @param bit The bit position within the register.
  */
-#define CPUID_BIT(leaf, word, bit) ((struct cpuid_bit){leaf, word, bit})
+#define CPUID_BIT(leaf, word, bit) ({leaf, word, bit})
 /** @} */
 
 /**
@@ -209,7 +208,7 @@ struct cpuid_bit {
  * @param[in] subleaf_num The CPUID sub-leaf number to query (if applicable).
  * @return `true` if the CPUID query was successful, `false` otherwise.
  */
-bool read_cpuid(struct cpuid_leaf* leaf, uint32_t leaf_num, uint32_t subleaf_num);
+bool read_cpuid(CpuidLeaf* leaf, uint32_t leaf_num, uint32_t subleaf_num);
 
 /**
  * @brief Tests if a specific CPU feature is supported.
@@ -220,6 +219,6 @@ bool read_cpuid(struct cpuid_leaf* leaf, uint32_t leaf_num, uint32_t subleaf_num
  * @param bit The `cpuid_bit` structure representing the feature to test.
  * @return `true` if the feature is supported, `false` otherwise.
  */
-bool test_feature(struct cpuid_bit bit);
+bool test_feature(CpuidBit bit);
 
 #endif  // CPU_FEATURES_H

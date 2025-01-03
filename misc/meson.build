@@ -1,4 +1,4 @@
-misc_sources = files('lock.c', 'log.c')
+misc_sources = files('log.cpp')
 
 clangtidy_files += misc_sources
 
@@ -10,5 +10,6 @@ misc = static_library(
     include_directories('../include/klibc'),
     include_directories('../include'),
   ],
+  dependencies: libstdcxx_dep,
   install: false,
 )

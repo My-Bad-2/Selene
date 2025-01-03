@@ -1,3 +1,1 @@
-kernel_sources += files(
-  'physical.c',
-)
+kernel_sources += files('physical.cpp')

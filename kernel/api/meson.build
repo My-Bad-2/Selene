@@ -1,1 +1,1 @@
-kernel_sources += files('calls.c')
+kernel_sources += files('calls.cpp')

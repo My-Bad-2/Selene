@@ -1,9 +1,9 @@
 kernel_sources += files(
-  'cpu.c',
-  'exceptions.c',
-  'features.c',
+  'cpu.cpp',
+  'exceptions.cpp',
+  'features.cpp',
   'gdt.S',
-  'gdt.c',
+  'gdt.cpp',
   'idt.S',
-  'idt.c',
+  'idt.cpp',
 )

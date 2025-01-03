@@ -3,8 +3,6 @@
 
 #include <kernel/kernel.h>
 
-#include "limine.h"
-
 __SECTION(".limine_requests") static volatile LIMINE_BASE_REVISION(3);
 
 __SECTION(".limine_requests_start_marker") __USED static volatile LIMINE_REQUESTS_START_MARKER;

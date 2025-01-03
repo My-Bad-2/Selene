@@ -1,1 +1,1 @@
-kernel_sources += files('uart.c')
+kernel_sources += files('uart.cpp',)
